@@ -1,0 +1,33 @@
+(org.osgi.framework.ServicePermission "org.ogema.core.application.Application" "register")
+(org.osgi.framework.ServicePermission "org.ogema.tools.widget.api.OgemaOsgiWidgetService" "get")
+(org.osgi.framework.PackagePermission "org.ogema.core.*" "import")
+(org.osgi.framework.PackagePermission "org.ogema.model.*" "import")
+(org.osgi.framework.PackagePermission "org.ogema.pattern.*" "import")
+
+# Widgets
+(org.osgi.framework.PackagePermission "org.ogema.tools.widget" "import")
+(org.osgi.framework.PackagePermission "org.ogema.tools.widget.*" "import")
+(org.osgi.framework.PackagePermission "org.ogema.util.datamanagement" "import")
+(org.osgi.framework.PackagePermission "org.ogema.util.datamanagement.*" "import")
+
+# Widget utils
+(org.osgi.framework.PackagePermission "org.ogema.util.collectionother" "import")
+(org.osgi.framework.PackagePermission "org.ogema.util.collectionother.*" "import")
+(org.osgi.framework.PackagePermission "org.ogema.util.resourcelist" "import")
+(org.osgi.framework.PackagePermission "org.ogema.util.resourcelist.*" "import")
+(org.osgi.framework.PackagePermission "org.ogema.tools.reswidget" "import")
+(org.osgi.framework.PackagePermission "org.ogema.tools.reswidget.*" "import")
+
+(org.osgi.framework.PackagePermission "org.json" "import")
+(org.osgi.framework.PackagePermission "org.json.*" "import")
+
+# TODO less generous resource permissions
+(org.ogema.accesscontrol.ResourcePermission "type=*" "read,write,addsub,create,activity,delete")
+(java.lang.RuntimePermission "accessDeclaredMembers")
+
+# custom type
+(org.osgi.framework.PackagePermission "org.ogema.app.heatbath.config" "exportonly")
+
+# FIXME necessary for advanced access, should be avoidable
+(org.osgi.framework.PackagePermission "java.lang.reflect" "import")   
+(org.osgi.framework.PackagePermission "java.lang.reflect.*" "import")

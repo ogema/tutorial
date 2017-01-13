@@ -1,0 +1,30 @@
+# OGEMA standard permissions
+(org.osgi.framework.ServicePermission "org.ogema.core.application.Application" "register")
+(org.osgi.framework.ServicePermission "org.ogema.gui.api.OgemaGuiService" "get")
+(org.osgi.framework.PackagePermission "org.ogema.core.*" "import")
+(org.osgi.framework.PackagePermission "org.ogema.model.*" "import")
+(org.osgi.framework.PackagePermission "org.ogema.tools.*" "import")
+(org.osgi.framework.PackagePermission "org.ogema.util.*" "import")
+(org.osgi.framework.PackagePermission "org.json" "import")
+(org.osgi.framework.PackagePermission "org.slf4j" "import")
+
+# export custom resource types
+(org.osgi.framework.PackagePermission "com.example.driver.schedule.csv.importer.model" "exportonly")
+
+# Resource permissions
+# all resource permissions for custom types
+(org.ogema.accesscontrol.ResourcePermission "type=com.example.driver.schedule.csv.importer.model.ScheduleCsvConfig" "read,write,addsub,create,activity,delete")
+(org.ogema.accesscontrol.ResourcePermission "type=com.example.driver.schedule.csv.importer.model.FolderConfiguration" "read,write,addsub,create,activity,delete")
+# Read permissions for all float resources; in practice, more restricted permissions should be used, e.g. filtered by path, in addition
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.core.model.simple.FloatResource" "read")
+
+# CSV library
+(org.osgi.framework.PackagePermission "org.apache.commons.csv" "import")
+
+# FilePermissions
+# The app will need some further file permissions as well, but they are actually determined at runtime only, 
+# and need to be configured dynamically (this is a bit cumbersome).
+# Note that an ALL_FILES permission request of the form (java.io.FilePermission "<<ALL_FILES>>" "...") is ignored by OGEMA. 
+# It only leads to a permission for the OSGi bundle storage area for the requesting app.
+(java.io.FilePermission "data/schedules/*" "read")
+

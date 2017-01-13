@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+       <artifactId>apps-master</artifactId>
+       <groupId>org.ogema.apps</groupId>
+       <version>2.1.1-alpha-20161114</version>
+    </parent>
+    
+    <artifactId>window-heat-control</artifactId>
+    <groupId>org.smartrplace.external</groupId>
+    <name>Window-Heat-Control</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <description>window sensor test demo app v3</description>
+    
+    <packaging>bundle</packaging>
+    
+    <repositories>
+    	<repository>
+		    <id>ogema-release</id>
+		    <name>ogema-release</name>
+		    <url>https://www.ogema-source.net/artifactory/libs-release</url>
+   		</repository>
+    </repositories>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ogema.core</groupId>
+            <artifactId>api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ogema.core</groupId>
+            <artifactId>models</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.iwes.widgets</groupId>
+            <artifactId>widget-collection-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.iwes.widgets</groupId>
+            <artifactId>util-extended</artifactId>
+            <version>2.1.1-SNAPSHOT</version>
+        </dependency>
+         <dependency>
+            <groupId>de.iwes.widgets</groupId>
+            <artifactId>ogema-js-bundle</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.iwes.widgets</groupId>
+            <artifactId>widget-collection</artifactId>
+        </dependency>
+         
+        <dependency>
+            <groupId>de.iwes.widgets</groupId>
+            <artifactId>widget-exam-base</artifactId>
+            <scope>test</scope>
+        </dependency>
+   </dependencies>
+</project>
