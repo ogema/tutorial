@@ -6,6 +6,12 @@ target/
 .recommenders
 *~
 ogema.zip
+
+build/
+tmp/
+temp/
+.gradle/
+
 /**/channelmapper.config
 rundirs/*/config/ua_repo.dat
 rundirs/*/security/users/ua_repo.dat

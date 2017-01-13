@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Smartrplace App DN</string>
+    <string name="edit_message">(no message)</string>
+    <string name="button_send">Off</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_display_message">DisplayMessageActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_httpexample">HTTPExampleActivity</string>
+    <string name="buttonHTTP">REST</string>
+    <string name="title_activity_servlet_wlan">ServletWLANActivity</string>
+    <string name="wlanServletButton">Start WLAN-OGEMA</string>
+    <string name="title_activity_rest2">REST2Activity</string>
+</resources>
