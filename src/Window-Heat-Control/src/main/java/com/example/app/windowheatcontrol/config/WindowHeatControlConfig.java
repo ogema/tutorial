@@ -1,4 +1,4 @@
-package org.smartrplace.external.windowheatcontrol.config;
+package com.example.app.windowheatcontrol.config;
 
 import org.ogema.core.model.simple.StringResource;
 import org.ogema.model.prototypes.Configuration;

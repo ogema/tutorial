@@ -9,7 +9,7 @@
  *
  * All Rights reserved
  */
-package org.smartrplace.external.windowheatcontrol.pattern;
+package com.example.app.windowheatcontrol.pattern;
 
 import org.ogema.core.model.Resource;
 import org.ogema.core.model.simple.FloatResource;
@@ -18,7 +18,8 @@ import org.ogema.model.devices.storage.ElectricityStorage;
 
 public class ElectricityStoragePattern extends ResourcePattern<ElectricityStorage> { 
 	
-	public FloatResource soc = model.chargeSensor().reading();
+	// state of charge
+	public final FloatResource soc = model.chargeSensor().reading();
 	
 	/**
 	 * Constructor for the access pattern. This constructor is invoked by the framework. Must be public.

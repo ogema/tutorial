@@ -12,8 +12,9 @@ import de.iwes.widgets.api.OgemaGuiService;
 import de.iwes.widgets.api.messaging.Message;
 import de.iwes.widgets.api.messaging.MessagePriority;
 
-@Component(specVersion = "1.2", immediate = true)
-@Service(Application.class) 
+// FIXME
+//@Component(specVersion = "1.2", immediate = true)
+//@Service(Application.class) 
 public class SimpleMessagingApp implements Application {
 	ApplicationManager appMan;
 
