@@ -1,0 +1,8 @@
+# OGEMA standard permissions
+(org.osgi.framework.ServicePermission "org.ogema.core.application.Application" "register")
+(org.osgi.framework.PackagePermission "org.ogema.core.*" "import")
+(org.osgi.framework.PackagePermission "org.ogema.tools.*" "import")
+
+# resource permissions
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.core.model.simple.IntegerResource" "read,write,create,activity")
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.sensors.Sensor" "read")

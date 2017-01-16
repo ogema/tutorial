@@ -1,0 +1,7 @@
+# OGEMA standard permissions
+(org.osgi.framework.ServicePermission "org.ogema.core.application.Application" "register")
+(org.osgi.framework.PackagePermission "org.ogema.core.*" "import")
+(org.osgi.framework.PackagePermission "de.iwes.util.format" "import")
+
+# resource permissions
+(org.ogema.accesscontrol.ResourcePermission "path=helloOGEMA,type=org.ogema.core.model.simple.StringResource" "read,write,create,activity")
