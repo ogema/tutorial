@@ -18,7 +18,7 @@
         <uses-sdk android:minSdkVersion="15"
             android:targetSdkVersion="22"/>
         <activity
-            android:name="com.example.dnestle.com.example.ogema.sample.connector.MyActivity"
+            android:name="com.example.ogema.connector.InitialActivity"
             android:label="@string/app_name"
             android:exported="true">
             <intent-filter>
@@ -28,30 +28,30 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.dnestle.com.example.ogema.sample.connector.DisplayMessageActivity"
+            android:name="com.example.ogema.connector.DisplayMessageActivity"
             android:label="@string/title_activity_display_message"
-            android:parentActivityName="com.example.dnestle.com.example.ogema.sample.connector.MyActivity" >
+            android:parentActivityName="com.example.ogema.connector.InitialActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.dnestle.com.example.ogema.sample.connector.MyActivity" />
+                android:value="com.example.ogema.connector.InitialActivity" />
         </activity>
         <activity
-            android:name="com.example.dnestle.com.example.ogema.sample.connector.ServletWLANActivity"
+            android:name="com.example.ogema.connector.ServletWLANActivity"
             android:label="@string/title_activity_servlet_wlan"
-            android:parentActivityName="com.example.dnestle.com.example.ogema.sample.connector.MyActivity" >
+            android:parentActivityName="com.example.ogema.connector.InitialActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.dnestle.com.example.ogema.sample.connector.MyActivity" />
+                android:value="com.example.ogema.connector.InitialActivity" />
         </activity>
 
         <service
-            android:name="com.example.dnestle.com.example.ogema.sample.connector.util_wlan.WLANOGEMAService"
+            android:name="com.example.ogema.connector.util_wlan.WLANOGEMAService"
             android:enabled="true"
             android:exported="true" >
         </service>
 
         <receiver
-            android:name="com.example.dnestle.com.example.ogema.sample.connector.util_startup.StartMyServiceAtBootReceiver"
+            android:name="com.example.ogema.connector.util_startup.StartMyServiceAtBootReceiver"
             android:label="StartMyServiceAtBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

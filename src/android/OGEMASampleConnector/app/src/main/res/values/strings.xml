@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Smartrplace App DN</string>
+    <string name="app_name">Sample OGEMA Connector</string>
     <string name="edit_message">(no message)</string>
     <string name="button_send">Off</string>
     <string name="action_settings">Settings</string>
