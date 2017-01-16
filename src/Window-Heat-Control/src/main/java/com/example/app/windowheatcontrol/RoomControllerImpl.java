@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.example.app.windowheatcontrol.api.internal.RoomController;
+import com.example.app.windowheatcontrol.config.RoomConfig;
 import com.example.app.windowheatcontrol.pattern.ElectricityStoragePattern;
 import com.example.app.windowheatcontrol.pattern.ThermostatPattern;
 import com.example.app.windowheatcontrol.pattern.WindowSensorPattern;
@@ -29,7 +30,8 @@ import de.iwes.util.linkingresource.LinkingManagementAccess;
 public class RoomControllerImpl implements RoomController {
 
 	private final static Logger logger = LoggerFactory.getLogger(WindowHeatControlApp.class);
-	private final Room room;
+	// configuration resource for this controller; also references the room managed
+	private final RoomConfig roomConfig;
 	// provides access to the thermostats in this room, which may change dynamically
 	private final LinkingManagementAccess<Room, ThermostatPattern> thermostats;
 	// provides access to the window sensors in this room, which may change dynamically
@@ -41,11 +43,11 @@ public class RoomControllerImpl implements RoomController {
 	private volatile boolean active = false;
 	private volatile boolean windowOpen = false;
 	
-	public RoomControllerImpl(Room room,
+	public RoomControllerImpl(RoomConfig roomConfig,
 					      LinkingManagementAccess<Room, ThermostatPattern> thermostats,
 					      LinkingManagementAccess<Room, WindowSensorPattern> windowSensors,
 					      ElectricityStorageListener batteryListener) {
-		this.room = room;
+		this.roomConfig = roomConfig;
 		this.thermostats = thermostats;
 		this.windowSensors = windowSensors;
 		this.batteryListener = batteryListener;
@@ -53,7 +55,7 @@ public class RoomControllerImpl implements RoomController {
 
 	@Override
 	public Room getRoom() {
-		return room;
+		return roomConfig.targetRoom();
 	}
 
 	@Override
@@ -96,7 +98,7 @@ public class RoomControllerImpl implements RoomController {
 	}
 	
 	private void start() {
-		logger.info("Window heat control app starting room management for {}",room.getLocation());
+		logger.info("Window heat control app starting room management for {}",roomConfig.targetRoom().getLocation());
 		for (WindowSensorPattern windowSensor : windowSensors.getElements()) {
 			windowSensor.open.addValueListener(windowListener);
 		}
@@ -107,7 +109,7 @@ public class RoomControllerImpl implements RoomController {
 	@Override
 	public void stop() {
 		active = false;
-		logger.info("Window heat control app stopping room management for {}",room.getLocation());
+		logger.info("Window heat control app stopping room management for {}",roomConfig.targetRoom().getLocation());
 		for (WindowSensorPattern windowSensor: windowSensors.getElements()) {
 			windowSensor.open.removeValueListener(windowListener);
 		}
@@ -137,7 +139,7 @@ public class RoomControllerImpl implements RoomController {
 	}
 	
 	@Override
-	public float getTemperatureSetpoint() {
+	public float getCurrentTemperatureSetpoint() {
 		final List<ThermostatPattern> list = thermostats.getElements();
 		if (list.isEmpty())
 			return Float.NaN;
@@ -149,10 +151,24 @@ public class RoomControllerImpl implements RoomController {
 	}
 	
 	@Override
-	public void setTemperatureSetpoint(float celsius) {
+	public void setCurrentTemperatureSetpoint(float celsius) throws IllegalArgumentException {
+		if (!Float.isFinite(celsius) || celsius < 0 || celsius > 35)
+			throw new IllegalArgumentException("Invalid temperature " + celsius);
 		for (ThermostatPattern thermostat : thermostats.getElements()) {
 			thermostat.setpoint.setCelsius(celsius);
 		}
+	}
+	
+	@Override
+	public float getWindowOpenTemperatureSetpoint() {
+		return roomConfig.windowOpenTemperature().getCelsius();
+	}
+	
+	@Override
+	public void setWindowOpenTemperatureSetpoint(float celsius) throws IllegalArgumentException {
+		if (!Float.isFinite(celsius) || celsius < 0 || celsius > 35)
+			throw new IllegalArgumentException("Invalid temperature " + celsius);
+		roomConfig.windowOpenTemperature().setCelsius(celsius);
 	}
 	
 	private final ResourceValueListener<BooleanResource> windowListener = new ResourceValueListener<BooleanResource>() {
@@ -162,7 +178,7 @@ public class RoomControllerImpl implements RoomController {
 		public void resourceChanged(BooleanResource resource) {
 			// there may be more than one window in the room, therefore it is not enough to evaluate the value of the changed resource only
 			final boolean windowOpenNew = getWindowOpenStatus();
-			logger.debug("Window status in room {} changed. Was open: {}, is open: {}", room.getLocation(), windowOpen, windowOpenNew);
+			logger.debug("Window status in room {} changed. Was open: {}, is open: {}", roomConfig.targetRoom().getLocation(), windowOpen, windowOpenNew);
 			// state did not change; may happen, for instance, if a second window is opened, in which case we do not want to change the thermostat setpoints
 			if (windowOpenNew == windowOpen)
 				return;
@@ -171,7 +187,13 @@ public class RoomControllerImpl implements RoomController {
 			for (ThermostatPattern th: thermostats.getElements()) {
 				if (windowOpenNew && !fullBatteryDetected) {
 					temperaturesBeforeWindowOpen.put(th.model, th.getTemperatureSetpointCelsius());
-					th.setpoint.setCelsius(WindowHeatControlController.WINDOW_OPEN_TEMPERATURE);
+					float value = roomConfig.windowOpenTemperature().getCelsius();
+					if (value <= 0 || value > 35) { // check if value is sensible
+						logger.warn("Extreme temperature value {}°C found in configuration. Ignoring this and using the default temperature {}°C instead.",
+								value, WindowHeatControlController.WINDOW_OPEN_TEMPERATURE);
+						value = WindowHeatControlController.WINDOW_OPEN_TEMPERATURE;
+					}
+					th.setpoint.setCelsius(value);
 				} else {
 					Float celsius = temperaturesBeforeWindowOpen.remove(th.model);
 					if (celsius == null)

@@ -57,14 +57,29 @@ public interface RoomController {
 	 * @return 
 	 * 		temperature in Celsius
 	 */
-	float getTemperatureSetpoint();
+	float getCurrentTemperatureSetpoint();
 	
 	/**
 	 * For use by a GUI.
 	 * Set the temperature setpoint for all thermostats in the room.
 	 * @param celsius
+	 * @throws IllegalArgumentException if value is outside a sensible range of 0-35°C
 	 */
-	void setTemperatureSetpoint(float celsius);
+	void setCurrentTemperatureSetpoint(float celsius) throws IllegalArgumentException;
+	
+	/**
+	 * Get the temperature setpoint for window open status
+	 * @return temperature in Celsius
+	 */
+	float getWindowOpenTemperatureSetpoint();
+	
+	/**
+	 * Set the temperature setpoint for window open status for all thermostats in the room.
+	 * @param celsius 
+	 * 		temperature in Celsius
+	 * @throws IllegalArgumentException if value is outside a sensible range of 0-35°C
+	 */
+	void setWindowOpenTemperatureSetpoint(float celsius) throws IllegalArgumentException;
 	
 	/**
 	 * For use by a GUI.
