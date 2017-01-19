@@ -3,6 +3,10 @@ package com.example.androiddriver;
 import org.ogema.core.application.ApplicationManager;
 import org.ogema.core.logging.OgemaLogger;
 import org.ogema.core.model.simple.FloatResource;
+import org.ogema.core.model.simple.StringResource;
+import org.ogema.core.resourcemanager.ResourceValueListener;
+import org.ogema.model.user.PersonalDevicePresenceInfo;
+import org.ogema.tools.resource.util.ResourceUtils;
 
 import com.example.androiddriver.drivermodel.SampleAndroiddriverConfig;
 import com.example.androiddriver.drivermodel.SampleAndroiddriverModel;
@@ -18,7 +22,67 @@ public class SampleAndroiddriverConectionManager {
 		this.log = appMan.getLogger();
 		
         initConfigurationResource();
+        
+		ResourceValueListener<StringResource> listener = 
+				new ResourceValueListener<StringResource>() {
+			@Override
+			public void resourceChanged(StringResource resource) {
+				System.out.println("dataflowIn changed:"+resource);
+				String val = resource.getValue();
+				int i = val.indexOf("mobilid=");
+				int j = val.indexOf("&ssid=");
+				String mobilId, ssId;
+				if(j<0) {
+					if(val.length() > (i+8)) mobilId = val.substring(i+8);
+					else mobilId = null;
+					ssId = null;
+				} else {
+					mobilId = val.substring(i+8, j);
+					ssId = val.substring(j+6);
+				}
+				processInflow(mobilId, ssId);
+			}
+		};
+		appConfigData.dataInflow().addValueListener(listener, true);
+		
  	}
+    
+	private PersonalDevicePresenceInfo processInflow(String mobilId, String ssId) {
+		if(mobilId == null) {
+			return null;
+		}
+		PersonalDevicePresenceInfo mcToUse = null;
+		for(SampleAndroiddriverModel deviceData: appConfigData.connections().getAllElements()) {
+			if(deviceData.target().mobilSerialId().getValue().equals(mobilId)) {
+				mcToUse = deviceData.target();
+				break;
+			}
+		}
+		if(mcToUse == null) {
+			//create new
+			String mobilIdName = ResourceUtils.getValidResourceName(mobilId);
+			mcToUse = appConfigData.connections().addDecorator(mobilIdName, SampleAndroiddriverModel.class).target();
+			mcToUse.mobilSerialId().create();
+			mcToUse.mobilSerialId().setValue(mobilId);
+			mcToUse.trackPresence().create();
+			mcToUse.trackPresence().setValue(true);
+			mcToUse.messageToDevice().create();
+			mcToUse.messageToDevice().setValue("");
+			mcToUse.lastMessageIdReceivedByDevice().create();
+			mcToUse.lastMessageIdReceivedByDevice().setValue("");
+			if(ssId != null) {
+				mcToUse.ssId().create();
+				mcToUse.ssId().setValue(ssId);
+			}
+			mcToUse.lastMessageReceived().create();
+			mcToUse.presenceDetected().create();
+			mcToUse.presenceDetected().setValue(false);
+			mcToUse.activate(true);
+		}
+		mcToUse.lastMessageReceived().setValue(appMan.getFrameworkTime());
+		//mcToUse.presenceDetected().setValue(true);
+		return mcToUse;
+	}
 
     /** Call this method when information on a new connection is available. This data can be provided
      * by some auto-detect / plug&play mechanism or from a GUI page where the user enters configuration
@@ -30,7 +94,7 @@ public class SampleAndroiddriverConectionManager {
      */
     public void createNewConnection(FloatResource value, Object configurationData ) {
     	SampleAndroiddriverModel newConnection = appConfigData.connections().add();
-		newConnection.value().setAsReference(value);
+		newConnection.target().setAsReference(value);
 		//TODO set other relevant data of the connection obtained from configurationData
 		newConnection.activate(true);
 	}
@@ -47,6 +111,8 @@ public class SampleAndroiddriverConectionManager {
 		}
 		else {
 			appConfigData = (SampleAndroiddriverConfig) appMan.getResourceManagement().createResource(name, SampleAndroiddriverConfig.class);
+			appConfigData.connections().create();
+			appConfigData.dataInflow().create();
 			appConfigData.activate(true);
 			appMan.getLogger().debug("{} started with new config resource", getClass().getName());
 		}

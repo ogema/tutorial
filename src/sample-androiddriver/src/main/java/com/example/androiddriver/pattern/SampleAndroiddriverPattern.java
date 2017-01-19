@@ -1,12 +1,11 @@
 package com.example.androiddriver.pattern;
 
 import org.ogema.core.model.Resource;
-import org.ogema.core.model.simple.BooleanResource;
-import org.ogema.core.model.simple.FloatResource;
 import org.ogema.core.model.simple.TimeResource;
 import org.ogema.core.resourcemanager.pattern.ResourcePattern;
 import org.ogema.model.communication.DeviceAddress;
 import org.ogema.model.communication.IPAddressV4;
+import org.ogema.model.user.PersonalDevicePresenceInfo;
 
 import com.example.androiddriver.drivermodel.SampleAndroiddriverModel;
 
@@ -26,19 +25,7 @@ public class SampleAndroiddriverPattern extends ResourcePattern<SampleAndroiddri
 	@Existence(required=CreateMode.OPTIONAL)
 	public final IPAddressV4 ipAddress = address.ipV4Address();
 	
-	public final FloatResource value = model.value();
-	
-	/**
-	 * If the resource does not exist, we assume the data point not to be writeable
-	 */
-	@Existence(required=CreateMode.OPTIONAL)
-	public final BooleanResource writeable = address.writeable();
-	
-	/**
-	 * If the resource does not exist, we assume the data point not to be readable
-	 */
-	@Existence(required=CreateMode.OPTIONAL)
-	public final BooleanResource readable = address.readable();
+	public final PersonalDevicePresenceInfo target = model.target();
 	
 	@Existence(required=CreateMode.OPTIONAL)
 	public final TimeResource pollingInterval = model.pollingConfiguration().pollingInterval();
