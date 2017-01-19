@@ -25,8 +25,10 @@
 
   <!-- Sub-projects -->
     <modules>
+		<module>hello-ogema</module>
 		<module>sample-androiddriver</module>
 		<module>schedule-csv-driver</module>
+		<module>sensor-app</module>
 		<module>Window-Heat-Control</module>
     </modules>
 

@@ -2,6 +2,7 @@ package com.example.app.windowheatcontrol.api.internal;
 
 import java.util.List;
 
+import org.ogema.core.model.units.TemperatureResource;
 import org.ogema.model.locations.Room;
 
 /**
@@ -23,5 +24,12 @@ public interface RoomManagement {
 	 * @return
 	 */
 	List<Room> getActiveRooms();
+	
+	/**
+	 * The window open temperature setpoint applied to new room configurations
+	 * @return
+	 * 		temperature in °C
+	 */
+	TemperatureResource getDefaultWindowOpenTemperatureSetting();
 
 }

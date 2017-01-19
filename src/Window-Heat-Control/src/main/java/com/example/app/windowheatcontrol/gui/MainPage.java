@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.ogema.core.model.simple.FloatResource;
+import org.ogema.core.model.units.TemperatureResource;
 import org.ogema.model.locations.Room;
 import org.ogema.tools.resource.util.ResourceUtils;
 
@@ -26,6 +27,7 @@ import de.iwes.widgets.html.form.label.Label;
 import de.iwes.widgets.html.form.textfield.ValueInputField;
 import de.iwes.widgets.object.widget.table.DefaultObjectRowTemplate;
 import de.iwes.widgets.resource.widget.label.ValueResourceLabel;
+import de.iwes.widgets.resource.widget.textfield.ValueResourceTextField;
 
 /**
  * An HTML page, generated from the Java code.
@@ -40,6 +42,7 @@ public class MainPage {
 	private final Alert alert;
 	private final Header roomsHeader;
 	private final ValueResourceLabel<FloatResource> batterySOC;
+	private final ValueResourceTextField<TemperatureResource> defaultWindowOpenTemp;
 	private final DynamicTable<Room> roomTable;
 	
 	public MainPage(final WidgetPage<?> page, final RoomManagement rooms, final ElectricityStorageListener batteryListener) {
@@ -65,6 +68,10 @@ public class MainPage {
 				selectItem((activeBattery != null ? activeBattery.soc : null), req);
 			}
 		};
+
+		// displays the value of a resource, and allows to change the value. The resource is completely static, 
+		// hence there is no need to overwrite #onGET(), as for the batterySOC-widget above.
+		defaultWindowOpenTemp = new ValueResourceTextField<TemperatureResource>(page, "defaultWindowOpenTemp", rooms.getDefaultWindowOpenTemperatureSetting());
 		
 		this.roomsHeader = new Header(page, "roomsheader", "Controlled rooms");
 		roomsHeader.addDefaultStyle(HeaderData.CENTERED);
@@ -78,7 +85,8 @@ public class MainPage {
 				final Map<String,Object> header = new LinkedHashMap<>();
 				// keys must be chosen in agreement with cells added in addRow method below
 				header.put("roomname", "Room name");
-				header.put("temperaturesetpoint", "Temperature setpoint");
+				header.put("temperaturesetpoint", "Active temperature setpoint");
+				header.put("windowopensetpoint", "Window open setpoint");
 				header.put("nrWindowSensors", "Window sensors");
 				header.put("nrThermostats", "Thermostats");
 				header.put("windowstatus", "Window open");
@@ -95,23 +103,8 @@ public class MainPage {
 				// simply set a default text in the constructor, and do not overwrite the onGET method
 				Label name = new Label(page, "name_"+lineId, roomLabel);
 				// set first column content
-				row.addCell("roomname",name, 2);
+				row.addCell("roomname",name);
 				
-				// FIXME remove; problem: this only works with a single thermostat, but there may be multiple
-//				ValueResourceTextField<TemperatureResource> setpoint = new ValueResourceTextField<TemperatureResource>(page, "setPoint_" + lineId) {
-//					
-//					private static final long serialVersionUID = 1L;
-//					
-//					@Override
-//					public void onGET(OgemaHttpRequest req) {
-//						ThermostatPattern thPattern = app.thermostats.getFirstElement(room);
-//						if (thPattern != null) {
-//							selectItem(thPattern.setpoint, req);
-//						} else {
-//							selectItem(null, req);
-//						}
-//					}
-//				};
 				// this widget displays the current temperature setpoint for the room (onGET), and allows the user to change it (onPOST)
 				ValueInputField<Float> setpoint = new ValueInputField<Float>(page, "setpoint_" + lineId, Float.TYPE) {
 
@@ -124,39 +117,60 @@ public class MainPage {
 							alert.showAlert("Please enter a valid temperature", false, req);
 							return;
 						}
-						controller.setTemperatureSetpoint(value);
-						alert.showAlert("New temperature setpoint for room " + roomLabel + ": " + value + "°C", true, req);
+						try {
+							controller.setCurrentTemperatureSetpoint(value);
+							alert.showAlert("New temperature setpoint for room " + roomLabel + ": " + value + "°C", true, req);
+						} catch (IllegalArgumentException e) {
+							alert.showAlert(e.getMessage(), false, req);
+						}
 					}
 					
 					@Override
 					public void onGET(OgemaHttpRequest req) {
-						float temp = controller.getTemperatureSetpoint();
+						float temp = controller.getCurrentTemperatureSetpoint();
 						setNumericalValue(temp, req);
 					}
 					
 				};
 				setpoint.setDefaultUnit("°C");
 				setpoint.setDefaultPollingInterval(UPDATE_RATE);
-				row.addCell("temperaturesetpoint",setpoint, 2);
+				row.addCell("temperaturesetpoint",setpoint);
 				setpoint.triggerAction(setpoint, TriggeringAction.POST_REQUEST, TriggeredAction.GET_REQUEST);
 				// in the onPOSTComplete method of setpoint, we set a message to be displayed by alert, hence we need to reload the alert after the POST
 				setpoint.triggerAction(alert, TriggeringAction.POST_REQUEST, TriggeredAction.GET_REQUEST);
 				
-				// FIXME remove
-//				ValueResourceLabel<BooleanResource> openStatus = new ValueResourceLabel<BooleanResource>(page, "openStatus_" + lineId) {
-//					
-//					private static final long serialVersionUID = 1L;
-//					
-//					@Override
-//					public void onGET(OgemaHttpRequest req) {
-//						WindowSensorPattern winPattern = app.windowSensors.getFirstElement(listElement);
-//						if (winPattern != null) {
-//							selectItem(winPattern.open, req);
-//						} else {
-//							selectItem(null, req);
-//						}
-//					}
-//				};
+				// this widget displays the configured temperature setpoint for window open status in this room 
+				ValueInputField<Float> windowOpenSetpoint = new ValueInputField<Float>(page, "windowOpenSetpoint_" + lineId, Float.TYPE) {
+
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void onPOSTComplete(String data, OgemaHttpRequest req) {
+						Float value = getNumericalValue(req);
+						if (value == null) {
+							alert.showAlert("Please enter a valid temperature", false, req);
+							return;
+						}
+						try {
+							controller.setWindowOpenTemperatureSetpoint(value);
+							alert.showAlert("New window open temperature setpoint for room " + roomLabel + ": " + value + "°C", true, req);
+						} catch (IllegalArgumentException e) {
+							alert.showAlert(e.getMessage(), false, req);
+						}
+					}
+					
+					@Override
+					public void onGET(OgemaHttpRequest req) {
+						float temp = controller.getWindowOpenTemperatureSetpoint();
+						setNumericalValue(temp, req);
+					}
+					
+				};
+				windowOpenSetpoint.setDefaultUnit("°C");
+				row.addCell("windowopensetpoint",windowOpenSetpoint);
+				windowOpenSetpoint.triggerAction(windowOpenSetpoint, TriggeringAction.POST_REQUEST, TriggeredAction.GET_REQUEST);
+				// in the onPOSTComplete method of windowOpenSetpoint, we set a message to be displayed by alert, hence we need to reload the alert after the POST
+				windowOpenSetpoint.triggerAction(alert, TriggeringAction.POST_REQUEST, TriggeredAction.GET_REQUEST);
 				
 				Label nrWindowSensors = new Label(page, "nrWindowSensors_" + lineId) {
 
@@ -194,7 +208,7 @@ public class MainPage {
 				};
 				
 				openStatus.setDefaultPollingInterval(UPDATE_RATE);
-				row.addCell("windowstatus", openStatus, 2);
+				row.addCell("windowstatus", openStatus);
 				return row;
 			}
 		};
@@ -217,19 +231,17 @@ public class MainPage {
 	
 	private final void buildPage() {
 		page.append(header).linebreak().append(alert).linebreak();
-    	//dropDetailRoom.registerDependentWidget(windowSensorDetails);
-    	//dropDetailRoom.registerDependentWidget(thermostatDetails);
-		StaticTable table1 = new StaticTable(1, 2);
+		StaticTable table1 = new StaticTable(2, 2, new int[] {3,3}); 
 		page.append(table1);
-		table1.setContent(0, 0, "Battery SOC:").setContent(0, 1, batterySOC);
+		table1.setContent(0, 0, "Battery SOC:").setContent(0, 1, batterySOC)
+			.setContent(1, 0, "Default window open temperature").setContent(1, 1, defaultWindowOpenTemp);
+		
 		page.linebreak().append(roomsHeader).append(roomTable);
-		//page.append(dropDetailRoom);
 		StaticTable table2 = new StaticTable(1, 2);
 		page.append(table2);
-		//table2.setContent(0, 0, windowSensorDetails).setContent(0, 1, thermostatDetails);
 	}
 	
-	// the page is completely static, no dependencies to be set here
+	// the page is rather static, no dependencies to be set here
 	private final void setDependencies() {
 	}
 	

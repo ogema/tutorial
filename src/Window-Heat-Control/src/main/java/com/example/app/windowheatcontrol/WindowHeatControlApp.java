@@ -18,7 +18,8 @@ import de.iwes.widgets.api.widgets.WidgetPage;
 @Component(specVersion = "1.2", immediate = true)
 @Service(Application.class)
 public class WindowHeatControlApp implements Application {
-	public static final String urlPath = "/org/smartrplace/external/windowheatcontrol";
+	
+	public static final String urlPath = "/com/example/app/windowheatcontrol";
 
     private ApplicationManager appMan;
     private WindowHeatControlController controller;
