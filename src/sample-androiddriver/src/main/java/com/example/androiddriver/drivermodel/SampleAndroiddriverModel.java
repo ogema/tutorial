@@ -1,6 +1,5 @@
 package com.example.androiddriver.drivermodel;
 
-import org.ogema.core.model.simple.FloatResource;
 import org.ogema.model.communication.CommunicationInformation;
 import org.ogema.model.user.PersonalDevicePresenceInfo;
 

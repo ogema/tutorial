@@ -61,23 +61,26 @@ public class SampleAndroiddriverConectionManager {
 		if(mcToUse == null) {
 			//create new
 			String mobilIdName = ResourceUtils.getValidResourceName(mobilId);
-			mcToUse = appConfigData.connections().addDecorator(mobilIdName, SampleAndroiddriverModel.class).target();
+			//mcToUse = appConfigData.connections().addDecorator(mobilIdName, SampleAndroiddriverModel.class).target();
+			mcToUse = appConfigData.mobileDeviceConfig().addDecorator(mobilIdName, PersonalDevicePresenceInfo.class);
 			mcToUse.mobilSerialId().create();
 			mcToUse.mobilSerialId().setValue(mobilId);
 			mcToUse.trackPresence().create();
 			mcToUse.trackPresence().setValue(true);
 			mcToUse.messageToDevice().create();
 			mcToUse.messageToDevice().setValue("");
-			mcToUse.lastMessageIdReceivedByDevice().create();
-			mcToUse.lastMessageIdReceivedByDevice().setValue("");
 			if(ssId != null) {
 				mcToUse.ssId().create();
 				mcToUse.ssId().setValue(ssId);
 			}
 			mcToUse.lastMessageReceived().create();
-			mcToUse.presenceDetected().create();
-			mcToUse.presenceDetected().setValue(false);
 			mcToUse.activate(true);
+			
+			//create driver configuration resource
+			SampleAndroiddriverModel comRes = appConfigData.connections().addDecorator(mobilIdName, SampleAndroiddriverModel.class);
+			comRes.target().setAsReference(mcToUse);
+			comRes.activate(true);
+
 		}
 		mcToUse.lastMessageReceived().setValue(appMan.getFrameworkTime());
 		//mcToUse.presenceDetected().setValue(true);

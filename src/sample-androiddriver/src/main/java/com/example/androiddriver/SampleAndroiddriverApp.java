@@ -4,13 +4,8 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.ogema.core.application.Application;
 import org.ogema.core.application.ApplicationManager;
-import org.ogema.core.application.Application.AppStopReason;
 import org.ogema.core.logging.OgemaLogger;
-import org.ogema.core.resourcemanager.AccessPriority;
 import org.ogema.core.resourcemanager.pattern.ResourcePatternAccess;
-
-import com.example.androiddriver.pattern.SampleAndroiddriverPattern;
-import com.example.androiddriver.patternlistener.SampleAndroiddriverListener;
 
 /**
  * Template OGEMA driver class
@@ -23,7 +18,6 @@ public class SampleAndroiddriverApp implements Application {
     private OgemaLogger log;
     private ApplicationManager appManager;
     private ResourcePatternAccess patternAccess;
-    private SampleAndroiddriverListener connectionListener;
 	private SampleAndroiddriverConectionManager connectionManager;
 
     /*
@@ -37,8 +31,6 @@ public class SampleAndroiddriverApp implements Application {
         patternAccess = appManager.getResourcePatternAccess();
         log = appManager.getLogger();
         connectionManager = new SampleAndroiddriverConectionManager(appManager);
-        connectionListener = new SampleAndroiddriverListener(appManager);
-        patternAccess.addPatternDemand(SampleAndroiddriverPattern.class, connectionListener, AccessPriority.PRIO_LOWEST);    
         log.info("{} started", getClass().getName());
    }
 
@@ -48,12 +40,10 @@ public class SampleAndroiddriverApp implements Application {
     @Override
     public void stop(AppStopReason reason) {
         log.info("{} being stopped", getClass().getName());
-        patternAccess.removePatternDemand(SampleAndroiddriverPattern.class, connectionListener);
         if(connectionManager != null) {
         	connectionManager.close();
         	connectionManager = null;
         }
-        connectionListener = null;
         appManager = null;
         patternAccess = null;
         log = null;

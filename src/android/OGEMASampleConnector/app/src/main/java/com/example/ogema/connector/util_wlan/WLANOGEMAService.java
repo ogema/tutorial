@@ -46,8 +46,10 @@ public class WLANOGEMAService extends Service implements WifiScanReceiver.WLANLi
     //public static Context context = null;
 
     private static final String DEBUG_TAG = "WLANServiceExample";
-    private String writePath = "MobileDeviceCommunication/dataInflow";
-    private String readPath = "MobileDeviceConfig";
+    //private String writePath = "MobileDeviceCommunication/dataInflow";
+    //private String readPath = "MobileDeviceConfig";
+    private String writePath = "sampleAndroiddriverConfig/dataInflow";
+    private String readPath = "sampleAndroiddriverConfig/mobileDeviceConfig";
     private WifiScanReceiver wifiSR;
     private String latestSSId = "";
     WriteRESTListener latestWriteRESTListener = null;

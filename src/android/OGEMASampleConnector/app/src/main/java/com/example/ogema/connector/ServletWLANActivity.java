@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -194,6 +195,7 @@ public class ServletWLANActivity extends Activity { //implements WifiScanReceive
         return;
     }
     Ringtone ringtone = null;
+    MediaPlayer mp = null;
     public void myClickHandlerTestInternalFunction(View view) {
         //ring phone
         if(ringtone == null) {
@@ -208,15 +210,21 @@ public class ServletWLANActivity extends Activity { //implements WifiScanReceive
                 }
             }
             ringtone = RingtoneManager.getRingtone(getApplicationContext(), alert);
+
+            MediaPlayer mp = MediaPlayer.create(getApplicationContext(), alert);
+            //ringtone.play();
+        }
+        if (!ringtone.isPlaying()) {
+            AudioManager amanager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+            amanager.setStreamVolume(AudioManager.STREAM_RING, amanager.getStreamMaxVolume(AudioManager.STREAM_RING), AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
             ringtone.play();
         } else {
-            if(!ringtone.isPlaying()) {
-                AudioManager amanager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-                amanager.setStreamVolume(AudioManager.STREAM_RING, amanager.getStreamMaxVolume(AudioManager.STREAM_RING), AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
-                        ringtone.play();
-            } else {
-                ringtone.stop();
-            }
+            ringtone.stop();
+        }
+        if(mp.isPlaying()) {
+            mp.stop();
+        } else {
+            mp.start();
         }
         return;
     }
