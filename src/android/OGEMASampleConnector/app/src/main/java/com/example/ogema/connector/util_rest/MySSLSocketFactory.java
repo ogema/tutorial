@@ -1,4 +1,4 @@
-package com.example.ogema.connector;
+package com.example.ogema.connector.util_rest;
 
 import java.io.IOException;
 import java.net.InetAddress;

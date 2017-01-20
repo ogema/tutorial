@@ -4,10 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioManager;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -17,11 +13,9 @@ import android.text.format.Formatter;
 import android.util.Log;
 
 import com.example.ogema.connector.util_file.FileUtil;
+import com.example.ogema.connector.util_other.AudioHelper;
 import com.example.ogema.connector.util_rest.RESTClient;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -141,16 +135,7 @@ public class WLANOGEMAService extends Service implements WifiScanReceiver.WLANLi
             FileUtil.writeConfigJSON(wlanScanConfig);
         } else {
             Log.e(DEBUG_TAG, "Read:"+json);
-            Gson gson = new Gson();
-            BufferedReader out = null;
-            out = FileUtil.getBufferedReader("wlanConfig.json");
-            wlanScanConfig = gson.fromJson(out, WLANScanConfig.class);
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                }
-            }
+            wlanScanConfig = FileUtil.readConfigJson("wlanConfig.json", WLANScanConfig.class);
             if(wlanScanConfig != null) {
                 Log.e(DEBUG_TAG, "bool:"+wlanScanConfig.scanUnknownNetworks);
             } else {
@@ -335,7 +320,8 @@ public class WLANOGEMAService extends Service implements WifiScanReceiver.WLANLi
                 }
 
                 value = "?mobilid="+serialId+"&ssid="+ssId;
-                new RESTClient().setStringValueViaREST(address, writePath, value, WLANOGEMAService.this, this);
+                new RESTClient().setStringValueViaREST(address, writePath, value, WLANOGEMAService.this, this,
+                        wlanScanConfig.restUser, wlanScanConfig.restPassword);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
@@ -380,7 +366,8 @@ public class WLANOGEMAService extends Service implements WifiScanReceiver.WLANLi
                     new RESTClient().setStringValueViaREST(hd.address, writePath, hd.value, WLANOGEMAService.this,
                             wlanScanConfig.restUser, wlanScanConfig.restPassword);
                 } else {
-                    new RESTClient().setStringValueViaREST(hd.address, writePath, hd.value, WLANOGEMAService.this);
+                    new RESTClient().setStringValueViaREST(hd.address, writePath, hd.value, WLANOGEMAService.this,
+                            wlanScanConfig.restUser, wlanScanConfig.restPassword);
                 }
                 Log.e("WIFISCAN", "First steop of Connect Task to:" + hd.address.getHostAddress());
                 //Bundle bundle = new Bundle();
@@ -389,7 +376,7 @@ public class WLANOGEMAService extends Service implements WifiScanReceiver.WLANLi
                 if(hd.trackDevice) {
                     Log.e("WIFISCAN", "track device to:" + hd.address.getHostAddress());
                     new RESTClient().getStringValueViaREST(hd.address, hd.readTrackDevicePath, WLANOGEMAService.this,
-                            new ReadRESTListener(hd));
+                            new ReadRESTListener(hd), wlanScanConfig.restUser, wlanScanConfig.restPassword);
                 }
             }
             connectionTimerActive = false;
@@ -413,11 +400,12 @@ public class WLANOGEMAService extends Service implements WifiScanReceiver.WLANLi
                 //check for messages
                 Log.e("WIFISCAN", "track device to:" + hd.address.getHostAddress());
                 new RESTClient().getStringValueViaREST(hd.address, readPath + "/" + validJavaOGEMAName(serialIdHelper) + "/messageToDevice", WLANOGEMAService.this,
-                        new ReadRESTMessageListener(hd));
+                        new ReadRESTMessageListener(hd), wlanScanConfig.restUser, wlanScanConfig.restPassword);
             }
         }
     }
 
+    private boolean activatedRing = false;
     public class ReadRESTMessageListener implements RESTClient.ResultListener {
         public ReadRESTMessageListener(HostData hd) {
             this.hd = hd;
@@ -430,38 +418,14 @@ public class WLANOGEMAService extends Service implements WifiScanReceiver.WLANLi
             if(getResult != null) {
                 String res = getValueFromJsonReply(getResult);
                 if((res != null) && res.equals("\"ring\"")) {
-                    ring();
+                    AudioHelper.setRingtone(true, WLANOGEMAService.this);
+                    activatedRing = true;
+                } else if(activatedRing) {
+                    AudioHelper.setRingtone(false, WLANOGEMAService.this);
+                    activatedRing = false;
                 }
             }
         }
-    }
-
-    Ringtone ringtone = null;
-    public void ring() {
-        //ring phone
-        if(ringtone == null) {
-            Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-
-            if ((alert == null)) {
-                // alert is null, using backup
-                alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                if (alert == null) {
-                    // alert backup is null, using 2nd backup
-                    alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                }
-            }
-            ringtone = RingtoneManager.getRingtone(getApplicationContext(), alert);
-            ringtone.play();
-        } else {
-            if(!ringtone.isPlaying()) {
-                AudioManager amanager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-                amanager.setStreamVolume(AudioManager.STREAM_RING, amanager.getStreamMaxVolume(AudioManager.STREAM_RING), AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
-                ringtone.play();
-            } else {
-                ringtone.stop();
-            }
-        }
-        return;
     }
 
     public static String getValueFromJsonReply(String json) {

@@ -28,14 +28,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.ogema.connector.DisplayMessageActivity"
-            android:label="@string/title_activity_display_message"
-            android:parentActivityName="com.example.ogema.connector.InitialActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.ogema.connector.InitialActivity" />
-        </activity>
-        <activity
             android:name="com.example.ogema.connector.ServletWLANActivity"
             android:label="@string/title_activity_servlet_wlan"
             android:parentActivityName="com.example.ogema.connector.InitialActivity" >

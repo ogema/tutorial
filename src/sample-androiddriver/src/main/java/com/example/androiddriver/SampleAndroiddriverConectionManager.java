@@ -115,6 +115,7 @@ public class SampleAndroiddriverConectionManager {
 		else {
 			appConfigData = (SampleAndroiddriverConfig) appMan.getResourceManagement().createResource(name, SampleAndroiddriverConfig.class);
 			appConfigData.connections().create();
+			appConfigData.mobileDeviceConfig().create();
 			appConfigData.dataInflow().create();
 			appConfigData.activate(true);
 			appMan.getLogger().debug("{} started with new config resource", getClass().getName());

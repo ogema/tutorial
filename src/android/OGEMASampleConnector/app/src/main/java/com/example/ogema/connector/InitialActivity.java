@@ -6,11 +6,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
 
 public class InitialActivity extends Activity {
-    public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
+    //public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
     private static final String DEBUG_TAG = "HttpExample";
 
     @Override
@@ -44,19 +43,7 @@ public class InitialActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Called when the user clicks the Send button
-     */
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText) findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-
-
-        startActivity(intent);
-    }
-
-    /** Called when user clicks button*/
+     /** Called when user clicks button*/
      public void openWLANServlet(View view) {
         Intent intent = new Intent(this, ServletWLANActivity.class);
         startActivity(intent);

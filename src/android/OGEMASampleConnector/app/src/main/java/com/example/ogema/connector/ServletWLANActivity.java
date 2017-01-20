@@ -1,13 +1,7 @@
 package com.example.ogema.connector;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -19,14 +13,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.ogema.connector.util_file.FileUtil;
+import com.example.ogema.connector.util_other.AudioHelper;
 import com.example.ogema.connector.util_wlan.WLANInput;
 import com.example.ogema.connector.util_wlan.WLANOGEMAService;
 import com.example.ogema.connector.util_wlan.WLANScanConfig;
 import com.example.ogema.connector.util_wlan.WifiScanReceiver;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,15 +64,16 @@ public class ServletWLANActivity extends Activity { //implements WifiScanReceive
             restPassword.setText("");
         } else {
             Log.e(DEBUG_TAG, "Read:"+json);
-            Gson gson = new Gson();
-            BufferedReader out = null;
-            out = FileUtil.getBufferedReader("wlanConfig.json");
-            wlanScanConfigForRestData = gson.fromJson(out, WLANScanConfig.class);
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {}
-            }
+            //Gson gson = new Gson();
+            //BufferedReader out = null;
+            //out = FileUtil.getBufferedReader("wlanConfig.json");
+            //wlanScanConfigForRestData = gson.fromJson(out, WLANScanConfig.class);
+            wlanScanConfigForRestData = FileUtil.readConfigJson("wlanConfig.json", WLANScanConfig.class);
+            //if (out != null) {
+            // try {
+            //        out.close();
+            //    } catch (IOException e) {}
+            //}
             if(wlanScanConfigForRestData != null) {
                 Log.e(DEBUG_TAG, "rest:"+wlanScanConfigForRestData.restUser+" / "+wlanScanConfigForRestData.restPassword);
                 restUser.setText(wlanScanConfigForRestData.restUser);
@@ -194,38 +187,7 @@ public class ServletWLANActivity extends Activity { //implements WifiScanReceive
         startService(i);
         return;
     }
-    Ringtone ringtone = null;
-    MediaPlayer mp = null;
     public void myClickHandlerTestInternalFunction(View view) {
-        //ring phone
-        if(ringtone == null) {
-            Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-
-            if ((alert == null)) {
-                // alert is null, using backup
-                alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                if (alert == null) {
-                    // alert backup is null, using 2nd backup
-                    alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                }
-            }
-            ringtone = RingtoneManager.getRingtone(getApplicationContext(), alert);
-
-            MediaPlayer mp = MediaPlayer.create(getApplicationContext(), alert);
-            //ringtone.play();
-        }
-        if (!ringtone.isPlaying()) {
-            AudioManager amanager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-            amanager.setStreamVolume(AudioManager.STREAM_RING, amanager.getStreamMaxVolume(AudioManager.STREAM_RING), AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
-            ringtone.play();
-        } else {
-            ringtone.stop();
-        }
-        if(mp.isPlaying()) {
-            mp.stop();
-        } else {
-            mp.start();
-        }
-        return;
+        AudioHelper.toggleRingTone(this);
     }
 }

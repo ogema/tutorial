@@ -7,8 +7,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.ogema.connector.MySSLSocketFactory;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,7 +35,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 
 /**
- * Created by dnestle on 15.06.2015.
+ * Helper for connecting to an OGEMA system via the OGEMA REST interface
  */
 public class RESTClient {
     public interface ResultListener {
@@ -52,24 +50,65 @@ public class RESTClient {
 
     private static final String DEBUG_TAG = "RESTClient";
 
-    public void setStringValueViaREST(InetAddress address, String resPath, String value, ContextWrapper act) {
-        setStringValueViaREST("https://"+address.getHostAddress()+":8443/rest/resources/"+resPath, value, act);
-    }
+    /**Write value via the OGEMA REST interface
+     *
+     * @param address IP or domain to write to
+     * @param resPath resource location to write to with delimiter '/'
+     * @param value value to write
+     * @param act
+     * @param restUser OGEMA REST user to use
+     * @param restPw password for OGEMA REST user
+     */
     public void setStringValueViaREST(InetAddress address, String resPath, String value, ContextWrapper act,
                                       String restUser, String restPw) {
         setStringValueViaREST("https://"+address.getHostAddress()+":8443/rest/resources/"+resPath+"?user="+restUser+"&pw="+restPw, value, act);
     }
-    public void setStringValueViaREST(InetAddress address, String resPath, String value, ContextWrapper act, ResultListener listener) {
-        setResultListener(listener);
-        setStringValueViaREST(address, resPath, value, act);
-    }
+
+    /**Write value via the OGEMA REST interface
+     *
+     * @param address IP or domain to write to
+     * @param resPath resource location to write to with delimiter '/'
+     * @param value value to write
+     * @param act
+     * @param listener if not null the listener will be called when the response from the OGEMA system is
+     *                 available
+     * @param restUser OGEMA REST user to use
+     * @param restPw password for OGEMA REST user
+     */
     public void setStringValueViaREST(InetAddress address, String resPath, String value, ContextWrapper act, ResultListener listener,
                                       String restUser, String restPw) {
         setResultListener(listener);
         setStringValueViaREST(address, resPath, value, act, restUser, restPw);
     }
 
-    public void setStringValueViaREST(String url, String value, ContextWrapper act) {
+    /**Read data from an OGEMA system via REST
+     *
+     * @param address IP or domain to read from
+     * @param resPath resource location to read from with delimiter '/'
+     * @param act
+     * @param listener listener will be called when the result is available
+     * @param restUser OGEMA REST user to use
+     * @param restPw password for OGEMA REST user
+     */
+    public void getStringValueViaREST(InetAddress address, String resPath, ContextWrapper act, ResultListener listener,
+                                      String restUser, String restPw) {
+        getStringValueViaREST("https://" + address.getHostAddress() + ":8443/rest/resources/" + resPath+"?user="+restUser+"&pw="+restPw, act, listener);
+    }
+
+
+    private void getStringValueViaREST(String url, ContextWrapper act, ResultListener listener) {
+        this.listener = listener;
+        ConnectivityManager connMgr = (ConnectivityManager)
+                act.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            new DownloadWebpageTask().execute(url, null);
+        } else {
+            listener.getRESTResult(null, null);
+        }
+    }
+
+    private void setStringValueViaREST(String url, String value, ContextWrapper act) {
         ConnectivityManager connMgr = (ConnectivityManager)
                 act.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -82,8 +121,6 @@ public class RESTClient {
         }
 
     }
-
-
     // Uses AsyncTask to create a task away from the main UI thread. This task takes a
     // URL string and uses it to create an HttpUrlConnection. Once the connection
     // has been established, the AsyncTask downloads the contents of the webpage as
@@ -284,29 +321,11 @@ public class RESTClient {
     }
 
     // Reads an InputStream and converts it to a String.
-    public String readIt(InputStream stream, int len) throws IOException {
+    private String readIt(InputStream stream, int len) throws IOException {
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
         char[] buffer = new char[len];
         reader.read(buffer);
         return new String(buffer);
     }
-
-    public void getStringValueViaREST(InetAddress address, String resPath, ContextWrapper act, ResultListener listener) {
-        getStringValueViaREST("https://" + address.getHostAddress() + ":8443/rest/resources/" + resPath, act, listener);
-    }
-
-    public void getStringValueViaREST(String url, ContextWrapper act, ResultListener listener) {
-        this.listener = listener;
-        ConnectivityManager connMgr = (ConnectivityManager)
-                act.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            new DownloadWebpageTask().execute(url, null);
-        } else {
-           listener.getRESTResult(null, null);
-        }
-    }
-
-
 }
