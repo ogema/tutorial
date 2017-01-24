@@ -11,6 +11,8 @@ import org.ogema.tools.resource.util.ResourceUtils;
 import com.example.androiddriver.drivermodel.SampleAndroiddriverConfig;
 import com.example.androiddriver.drivermodel.SampleAndroiddriverModel;
 
+import de.iwes.util.format.StringFormatHelper;
+
 public class SampleAndroiddriverConectionManager {
 	public OgemaLogger log;
     public ApplicationManager appMan;
@@ -107,19 +109,30 @@ public class SampleAndroiddriverConectionManager {
      */
     private void initConfigurationResource() {
 		String configResourceDefaultName = SampleAndroiddriverConfig.class.getSimpleName().substring(0, 1).toLowerCase()+SampleAndroiddriverConfig.class.getSimpleName().substring(1);
-		final String name = appMan.getResourceManagement().getUniqueResourceName(configResourceDefaultName);
-		appConfigData = appMan.getResourceAccess().getResource(name);
+		appConfigData = appMan.getResourceAccess().getResource(configResourceDefaultName);
 		if (appConfigData != null) { // resource already exists (appears in case of non-clean start)
 			appMan.getLogger().debug("{} started with previously-existing config resource", getClass().getName());
 		}
 		else {
-			appConfigData = (SampleAndroiddriverConfig) appMan.getResourceManagement().createResource(name, SampleAndroiddriverConfig.class);
+			appConfigData = (SampleAndroiddriverConfig) appMan.getResourceManagement().createResource(configResourceDefaultName, SampleAndroiddriverConfig.class);
 			appConfigData.connections().create();
 			appConfigData.mobileDeviceConfig().create();
 			appConfigData.dataInflow().create();
+			appConfigData.dataInflow().setValue(appConfigData.dataInflow().getValue()+"X");
+			appConfigData.test().create();
+			appConfigData.test().setValue(appConfigData.test().getValue()+"T");
+			appConfigData.testNP().create();
+			appConfigData.testNP().setValue(appConfigData.testNP().getValue()+1.5f);
 			appConfigData.activate(true);
 			appMan.getLogger().debug("{} started with new config resource", getClass().getName());
 		}
+		appConfigData.test().setValue(appConfigData.test().getValue()+"S");
+		System.out.println("datainflow updateT:"+StringFormatHelper.getFullTimeDateInLocalTimeZone(
+				appConfigData.dataInflow().getLastUpdateTime()));
+		System.out.println("test updateT:"+StringFormatHelper.getFullTimeDateInLocalTimeZone(
+				appConfigData.test().getLastUpdateTime()));
+		System.out.println("testNP updateT:"+StringFormatHelper.getFullTimeDateInLocalTimeZone(
+				appConfigData.testNP().getLastUpdateTime()));
     }
     
     public void close() {

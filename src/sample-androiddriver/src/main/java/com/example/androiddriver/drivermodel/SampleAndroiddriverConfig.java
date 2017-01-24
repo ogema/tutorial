@@ -1,6 +1,8 @@
 package com.example.androiddriver.drivermodel;
 
+import org.ogema.core.model.ModelModifiers.NonPersistent;
 import org.ogema.core.model.ResourceList;
+import org.ogema.core.model.simple.FloatResource;
 import org.ogema.core.model.simple.StringResource;
 import org.ogema.model.prototypes.Configuration;
 import org.ogema.model.user.PersonalDevicePresenceInfo;
@@ -16,5 +18,11 @@ public interface SampleAndroiddriverConfig extends Configuration {
 	ResourceList<PersonalDevicePresenceInfo> mobileDeviceConfig();
 	
 	/**Receive initial information from mobile device here*/
+	@NonPersistent
 	StringResource dataInflow();
+	
+	StringResource test();
+	
+	@NonPersistent
+	FloatResource testNP();
 }
