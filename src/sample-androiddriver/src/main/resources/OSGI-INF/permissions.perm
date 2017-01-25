@@ -13,3 +13,6 @@
 (org.osgi.framework.PackagePermission "org.slf4j" "import")
 
 #Automated Generation Below:
+(org.ogema.accesscontrol.ResourcePermission "type=com.example.androiddriver.drivermodel.SampleAndroiddriverConfig" "read,write,addsub,create,activity,delete")
+(org.ogema.accesscontrol.ResourcePermission "type=com.example.androiddriver.drivermodel.SampleAndroiddriverModel" "read,write,addsub,create,activity,delete")
+(org.osgi.framework.PackagePermission "com.example.androiddriver.drivermodel" "exportonly")
