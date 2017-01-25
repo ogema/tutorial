@@ -31,7 +31,7 @@ public class WindowHeatControlController implements RoomManagement {
 	protected static final float WINDOW_OPEN_TEMPERATURE = 12.0f;
 	private final ApplicationManager appMan;
 	private final ResourcePatternAccess patternAccess;
-	private final OgemaLogger log;
+	public final OgemaLogger log;
 	
 	private final WindowHeatControlConfig appConfigData;
 	// keeps track of all rooms in the system which are equipped with at least one window sensor and thermostat, each.
@@ -41,7 +41,7 @@ public class WindowHeatControlController implements RoomManagement {
 	private final LinkingResourceManagement<Room, WindowSensorPattern> windowSensors;
 	// keeps track of thermostat -> room associations
 	private final LinkingResourceManagement<Room, ThermostatPattern> thermostats;
-	final ElectricityStorageListener electricityStorageListener;
+	public final ElectricityStorageListener batteryListener;
 	private final ThermostatListener thermostatListener;
 	private final WindowSensorListener windowSensorListener;
 	
@@ -51,7 +51,7 @@ public class WindowHeatControlController implements RoomManagement {
 		this.patternAccess = appMan.getResourcePatternAccess();
 		
         this.appConfigData = initConfigurationResource();
-        this.electricityStorageListener = new ElectricityStorageListener();
+        this.batteryListener = new ElectricityStorageListener();
         this.windowSensors = new LinkingResourceManagement<>();
         this.windowSensorListener = new WindowSensorListener(windowSensors, this, appMan);
         this.thermostats = new LinkingResourceManagement<>();
@@ -61,13 +61,13 @@ public class WindowHeatControlController implements RoomManagement {
     
     
     private final void initDemands() {
-    	 patternAccess.addPatternDemand(ElectricityStoragePattern.class, electricityStorageListener, AccessPriority.PRIO_LOWEST);
+    	 patternAccess.addPatternDemand(ElectricityStoragePattern.class, batteryListener, AccessPriority.PRIO_LOWEST);
     	 patternAccess.addPatternDemand(ThermostatPattern.class, thermostatListener, AccessPriority.PRIO_LOWEST);
     	 patternAccess.addPatternDemand(WindowSensorPattern.class, windowSensorListener, AccessPriority.PRIO_LOWEST);
     }
     
 	public void close() {
-		patternAccess.removePatternDemand(ElectricityStoragePattern.class, electricityStorageListener);
+		patternAccess.removePatternDemand(ElectricityStoragePattern.class, batteryListener);
 	   	patternAccess.removePatternDemand(ThermostatPattern.class, thermostatListener);
 	   	patternAccess.removePatternDemand(WindowSensorPattern.class, windowSensorListener);
 		for (RoomController controller: roomControllers.values()) {
@@ -128,7 +128,7 @@ public class WindowHeatControlController implements RoomManagement {
     		controller = new RoomControllerImpl(config, 
     											thermostats.getSingleResourceManagement(room), 
     											windowSensors.getSingleResourceManagement(room), 
-    											electricityStorageListener);
+    											batteryListener);
     		roomControllers.put(room, controller);
     	}
     	return controller;

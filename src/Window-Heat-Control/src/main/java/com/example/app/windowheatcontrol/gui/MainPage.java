@@ -8,10 +8,9 @@ import org.ogema.core.model.units.TemperatureResource;
 import org.ogema.model.locations.Room;
 import org.ogema.tools.resource.util.ResourceUtils;
 
+import com.example.app.windowheatcontrol.WindowHeatControlController;
 import com.example.app.windowheatcontrol.api.internal.RoomController;
-import com.example.app.windowheatcontrol.api.internal.RoomManagement;
 import com.example.app.windowheatcontrol.pattern.ElectricityStoragePattern;
-import com.example.app.windowheatcontrol.patternlistener.ElectricityStorageListener;
 
 import de.iwes.widgets.api.widgets.WidgetPage;
 import de.iwes.widgets.api.widgets.dynamics.TriggeredAction;
@@ -39,22 +38,22 @@ public class MainPage {
 	
 	// the widgets, or building blocks, of the page; defined in the constructor
 	private final Header header;
-	private final Alert alert;
-	private final Header roomsHeader;
 	private final ValueResourceLabel<FloatResource> batterySOC;
 	private final ValueResourceTextField<TemperatureResource> defaultWindowOpenTemp;
+	private final Header roomsHeader;
 	private final DynamicTable<Room> roomTable;
+	private final Alert alert;
 	
-	public MainPage(final WidgetPage<?> page, final RoomManagement rooms, final ElectricityStorageListener batteryListener) {
+	public MainPage(final WidgetPage<?> page, final WindowHeatControlController appController) {
 		this.page = page;
 
 		//init all widgets
 		
-		this.header = new Header(page, "header", "Battery-extended Window-Heat Control");
+		header = new Header(page, "header", "Battery-extended Window-Heat Control");
 		header.addDefaultStyle(HeaderData.CENTERED);
 		
 		// displays messages to the user
-		this.alert = new Alert(page, "alert", "");
+		alert = new Alert(page, "alert", "");
 		alert.setDefaultVisibility(false);
 
 		// this widget simply displays the value of a resource, here the state of charge of the battery
@@ -64,14 +63,18 @@ public class MainPage {
 
 			@Override
 			public void onGET(OgemaHttpRequest req) {
-				final ElectricityStoragePattern activeBattery = batteryListener.getActiveBattery();
-				selectItem((activeBattery != null ? activeBattery.soc : null), req);
+				final ElectricityStoragePattern activeBattery = appController.batteryListener.getActiveBattery();
+				if(activeBattery != null)
+					selectItem(activeBattery.soc, req);
+				else
+					selectItem(null, req);
 			}
 		};
 
 		// displays the value of a resource, and allows to change the value. The resource is completely static, 
 		// hence there is no need to overwrite #onGET(), as for the batterySOC-widget above.
-		defaultWindowOpenTemp = new ValueResourceTextField<TemperatureResource>(page, "defaultWindowOpenTemp", rooms.getDefaultWindowOpenTemperatureSetting());
+		defaultWindowOpenTemp = new ValueResourceTextField<TemperatureResource>(page, "defaultWindowOpenTemp",
+				appController.getDefaultWindowOpenTemperatureSetting());
 		
 		this.roomsHeader = new Header(page, "roomsheader", "Controlled rooms");
 		roomsHeader.addDefaultStyle(HeaderData.CENTERED);
@@ -96,16 +99,15 @@ public class MainPage {
 			@Override
 			public Row addRow(final Room room, final OgemaHttpRequest req) {
 				final Row row = new Row();
-				final RoomController controller = rooms.getController(room);
 				final String lineId = getLineId(room);
-				final String roomLabel = ResourceUtils.getHumanReadableName(room);
 				// this widget displays the name of the room; since the content cannot change, we
 				// simply set a default text in the constructor, and do not overwrite the onGET method
-				Label name = new Label(page, "name_"+lineId, roomLabel);
+				Label name = new Label(page, "name_"+lineId, ResourceUtils.getHumanReadableName(room));
 				// set first column content
 				row.addCell("roomname",name);
 				
 				// this widget displays the current temperature setpoint for the room (onGET), and allows the user to change it (onPOST)
+				final RoomController controller = appController.getController(room);
 				ValueInputField<Float> setpoint = new ValueInputField<Float>(page, "setpoint_" + lineId, Float.TYPE) {
 
 					private static final long serialVersionUID = 1L;
@@ -119,7 +121,7 @@ public class MainPage {
 						}
 						try {
 							controller.setCurrentTemperatureSetpoint(value);
-							alert.showAlert("New temperature setpoint for room " + roomLabel + ": " + value + "°C", true, req);
+							alert.showAlert("New temperature setpoint for room " + ResourceUtils.getHumanReadableName(room) + ": " + value + "°C", true, req);
 						} catch (IllegalArgumentException e) {
 							alert.showAlert(e.getMessage(), false, req);
 						}
@@ -135,9 +137,10 @@ public class MainPage {
 				setpoint.setDefaultUnit("°C");
 				setpoint.setDefaultPollingInterval(UPDATE_RATE);
 				row.addCell("temperaturesetpoint",setpoint);
-				setpoint.triggerAction(setpoint, TriggeringAction.POST_REQUEST, TriggeredAction.GET_REQUEST);
+				//we have to make sure the value shown in the client is updated according to what the server accepted
+				setpoint.registerDependentWidget(setpoint);
 				// in the onPOSTComplete method of setpoint, we set a message to be displayed by alert, hence we need to reload the alert after the POST
-				setpoint.triggerAction(alert, TriggeringAction.POST_REQUEST, TriggeredAction.GET_REQUEST);
+				setpoint.registerDependentWidget(alert);
 				
 				// this widget displays the configured temperature setpoint for window open status in this room 
 				ValueInputField<Float> windowOpenSetpoint = new ValueInputField<Float>(page, "windowOpenSetpoint_" + lineId, Float.TYPE) {
@@ -153,7 +156,7 @@ public class MainPage {
 						}
 						try {
 							controller.setWindowOpenTemperatureSetpoint(value);
-							alert.showAlert("New window open temperature setpoint for room " + roomLabel + ": " + value + "°C", true, req);
+							alert.showAlert("New window open temperature setpoint for room " + ResourceUtils.getHumanReadableName(room) + ": " + value + "°C", true, req);
 						} catch (IllegalArgumentException e) {
 							alert.showAlert(e.getMessage(), false, req);
 						}
@@ -221,7 +224,7 @@ public class MainPage {
 			@Override
 			public void onGET(OgemaHttpRequest req) {
 				//find all managed rooms
-				updateRows(rooms.getActiveRooms(), req);
+				updateRows(appController.getActiveRooms(), req);
 			}
 		};
 		roomTable.setRowTemplate(roomTemplate);
@@ -237,8 +240,6 @@ public class MainPage {
 			.setContent(1, 0, "Default window open temperature").setContent(1, 1, defaultWindowOpenTemp);
 		
 		page.linebreak().append(roomsHeader).append(roomTable);
-		StaticTable table2 = new StaticTable(1, 2);
-		page.append(table2);
 	}
 	
 	// the page is rather static, no dependencies to be set here

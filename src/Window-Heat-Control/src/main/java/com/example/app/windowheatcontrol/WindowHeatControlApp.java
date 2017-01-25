@@ -44,7 +44,7 @@ public class WindowHeatControlApp implements Application {
 		//register a web page with dynamically generated HTML
 		widgetApp = guiService.createWidgetApp(urlPath, appManager);
 		WidgetPage<?> page = widgetApp.createStartPage();
-		new MainPage(page, controller, controller.electricityStorageListener);
+		new MainPage(page, controller);
      }
 
      /*
