@@ -12,8 +12,8 @@ import org.ogema.model.scheduleviewer.config.ScheduleViewerConfig;
 import com.example.app.windowheatcontrol.api.internal.RoomManagement;
 import com.example.app.windowheatcontrol.pattern.ThermostatPattern;
 
-import de.iwes.util.collectionother.LogHelper;
 import de.iwes.util.linkingresource.LinkingResourceManagement;
+import de.iwes.util.logconfig.LogHelper;
 
 /**
  * Keeps track of thermostats, and informs the appropriate RoomController about new and disappearing devices. 

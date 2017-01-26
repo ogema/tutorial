@@ -12,8 +12,8 @@ import org.ogema.model.sensors.DoorWindowSensor;
 import com.example.app.windowheatcontrol.api.internal.RoomManagement;
 import com.example.app.windowheatcontrol.pattern.WindowSensorPattern;
 
-import de.iwes.util.collectionother.LogHelper;
 import de.iwes.util.linkingresource.LinkingResourceManagement;
+import de.iwes.util.logconfig.LogHelper;
 
 /**
  * Keeps track of window sensors, and informs the appropriate RoomController about new and disappearing sensors. 

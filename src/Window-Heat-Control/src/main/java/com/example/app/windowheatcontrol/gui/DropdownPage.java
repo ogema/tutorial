@@ -6,7 +6,7 @@ import org.ogema.tools.resource.util.ResourceUtils;
 import com.example.app.windowheatcontrol.WindowHeatControlController;
 import com.example.app.windowheatcontrol.api.internal.RoomController;
 
-import de.iwes.util.collectionother.IntegerEnumHelper;
+import de.iwes.util.linkingresource.RoomHelper;
 import de.iwes.widgets.api.extended.resource.DefaultResourceTemplate;
 import de.iwes.widgets.api.widgets.WidgetPage;
 import de.iwes.widgets.api.widgets.html.StaticTable;
@@ -45,7 +45,7 @@ public class DropdownPage {
 			@Override
 			public String getLabel(Room room, OgemaLocale locale) {
 				if(room.type().isActive())
-					return ResourceUtils.getHumanReadableName(room)+" Type:"+IntegerEnumHelper.getRoomTypeString(room.type().getValue());
+					return ResourceUtils.getHumanReadableName(room)+" Type:"+RoomHelper.getRoomTypeString(room.type().getValue());
 				else return super.getLabel(room, locale);
 			}
 		};
