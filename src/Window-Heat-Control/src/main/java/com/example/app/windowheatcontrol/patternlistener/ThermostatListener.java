@@ -41,14 +41,11 @@ public class ThermostatListener implements PatternListener<ThermostatPattern> {
 		rooms.getController(room).settingsChanged();
 		
 		// value logging
-		// FIXME development version -> creates a schedule viewer configuration, which would be considered as resource spam in a deployed app
-		// FIXME use non-HM version?
-		ScheduleViewerConfig viewerConfig1 = LogHelper.addResourceToRoomLogHM(thermostat.setpoint, "ThermostatSetpoint", null, appMan);
-		ScheduleViewerConfig viewerConfig2 = LogHelper.addResourceToRoomLogHM(thermostat.reading, "ThermostatTemperatureMeasurement", null, appMan);
+		// development version -> creates a schedule viewer configuration, which would be considered as resource spam in a deployed app
+		// TODO: remove for deployment version
+		ScheduleViewerConfig viewerConfig1 = LogHelper.addResourceToRoomLog(thermostat.setpoint, "ThermostatSetpoint", null, appMan);
+		ScheduleViewerConfig viewerConfig2 = LogHelper.addResourceToRoomLog(thermostat.reading, "ThermostatTemperatureMeasurement", null, appMan);
 		viewerConfigs.put(thermostat.model, new ScheduleViewerConfig[] {viewerConfig1, viewerConfig2});
-		// deployment version
-		// LoggingUtils.activateLogging(pattern.setpoint, -2);
-		// LoggingUtils.activateLogging(pattern.reading, -2);
 	}
 	
 	@Override
@@ -59,6 +56,7 @@ public class ThermostatListener implements PatternListener<ThermostatPattern> {
 		rooms.getController(room).settingsChanged();
 		
 		// value logging  
+		// TODO: remove for deployment version
 		ScheduleViewerConfig[] viewerConfig = viewerConfigs.remove(thermostat.model);
 		if (viewerConfig != null) {
 			for (ScheduleViewerConfig config: viewerConfig) {

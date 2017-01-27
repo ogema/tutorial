@@ -44,7 +44,7 @@ public class WindowSensorListener implements PatternListener<WindowSensorPattern
 		// value logging
 		// development version -> creates a schedule viewer configuration, which would be considered as resource spam in a deployed app
 		// TODO: remove for deployment version
-		ScheduleViewerConfig viewerConfig = LogHelper.addResourceToRoomLogHM(sensor.open, "WindowSensor", null, appMan);
+		ScheduleViewerConfig viewerConfig = LogHelper.addResourceToRoomLog(sensor.open, "WindowSensor", null, appMan);
 		viewerConfigs.put(sensor.model, viewerConfig);
 	}
 	
@@ -55,6 +55,7 @@ public class WindowSensorListener implements PatternListener<WindowSensorPattern
 			rooms.getController(room).removeWindowSensor(sensor);
 		
 		// value logging
+		// TODO: remove for deployment version
 		ScheduleViewerConfig config = viewerConfigs.remove(sensor.model);
 		if (config != null)
 			config.delete();
