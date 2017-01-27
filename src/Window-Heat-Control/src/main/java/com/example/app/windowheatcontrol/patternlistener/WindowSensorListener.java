@@ -42,12 +42,10 @@ public class WindowSensorListener implements PatternListener<WindowSensorPattern
 		rooms.getController(room).addWindowSensor(sensor);
 		
 		// value logging
-		// FIXME development version -> creates a schedule viewer configuration, which would be considered as resource spam in a deployed app
-		// FIXME use non-HM version?
+		// development version -> creates a schedule viewer configuration, which would be considered as resource spam in a deployed app
+		// TODO: remove for deployment version
 		ScheduleViewerConfig viewerConfig = LogHelper.addResourceToRoomLogHM(sensor.open, "WindowSensor", null, appMan);
 		viewerConfigs.put(sensor.model, viewerConfig);
-		// deployment version
-		// LoggingUtils.activateLogging(pattern.setpoint, -2);
 	}
 	
 	@Override
