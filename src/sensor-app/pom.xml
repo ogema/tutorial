@@ -64,8 +64,7 @@
         <dependency>
             <groupId>de.iwes.widgets</groupId>
             <artifactId>widget-extended</artifactId>
-            <version>2.1.1-SNAPSHOT</version> <!-- FIXME -->
-        </dependency>
+         </dependency>
         <dependency>
             <groupId>de.iwes.widgets</groupId>
             <artifactId>widget-exam-base</artifactId>
