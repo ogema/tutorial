@@ -30,6 +30,8 @@
 		<module>schedule-csv-driver</module>
 		<module>sensor-app</module>
 		<module>Window-Heat-Control</module>
+		<module>simulations</module>
+		<module>widgets-overview</module>
     </modules>
 
     <build>
