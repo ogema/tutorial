@@ -14,12 +14,20 @@
 	<version>2.1.1-alpha-20170127</version>
 	<name>Simple Example simulations</name>
     <packaging>pom</packaging>
+    
+    <repositories>
+		<repository>
+			<id>ogema-release</id>
+			<name>ogema-release</name>
+			<url>https://www.ogema-source.net/artifactory/libs-release</url>
+		</repository>
+	</repositories>
 	
     <!-- Sub-projects: OGEMA Applications (in alphabetical order) -->
     <modules>
 		<module>simple-devices</module>
     </modules>
-
+    
     <build>
         <plugins>
             <plugin>
