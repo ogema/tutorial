@@ -33,5 +33,5 @@
 # and need to be configured dynamically (this is a bit cumbersome).
 # Note that an ALL_FILES permission request of the form (java.io.FilePermission "<<ALL_FILES>>" "...") is ignored by OGEMA. 
 # It only leads to a permission for the OSGi bundle storage area for the requesting app.
-(java.io.FilePermission "data/schedules/*" "read")
-
+(java.io.FilePermission "data/schedules" "read,write")
+(java.io.FilePermission "data/schedules/*" "read,write")

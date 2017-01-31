@@ -22,5 +22,6 @@
 # Read permissions (at least) for pattern model types
 (org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.sensors.TemperatureSensor" "read")
 (org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.sensors.HumiditySensor" "read,write")
-(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.core.model.ResourceList, path=/OGEMASimulationConfiguration" "read,write,create")
+# doPriviledged in simulation service
+#(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.tools.simulation.service.apiplus.SimulationConfigurationModel, path=/OGEMASimulationConfiguration" "read,write,create")
 
