@@ -34,7 +34,7 @@ public class HelloOgemaApp implements Application {
         // create a new Resource; if a top-level Resource with the given name already exists, it is returned 
         final StringResource helloResource = appManager.getResourceManagement().createResource("helloOGEMA", StringResource.class);
         if (!helloResource.isActive()) { // in an unclean start the resource could be there already
-        	helloResource.<StringResource> create().setValue("Hello OGEMA!");
+        	helloResource.setValue("Hello OGEMA!");
         	helloResource.activate(false);
         }
         // a timer that is triggered every 10s

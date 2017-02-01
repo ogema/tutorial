@@ -115,7 +115,6 @@ public class DropdownPage {
 			.setContent(2, 0, "temperaturesetpoint").setContent(2, 1, setpoint);
 	}
 	
-	// the page is rather static, no dependencies to be set here
 	private final void setDependencies() {
 		//we have to make sure the value shown in the client is updated according to what the server accepted
 		setpoint.registerDependentWidget(setpoint);

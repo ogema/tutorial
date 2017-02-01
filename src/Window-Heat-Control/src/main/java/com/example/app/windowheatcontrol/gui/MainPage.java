@@ -138,9 +138,9 @@ public class MainPage {
 				setpoint.setDefaultPollingInterval(UPDATE_RATE);
 				row.addCell("temperaturesetpoint",setpoint);
 				//we have to make sure the value shown in the client is updated according to what the server accepted
-				setpoint.registerDependentWidget(setpoint);
+				setpoint.triggerAction(setpoint, TriggeringAction.POST_REQUEST, TriggeredAction.GET_REQUEST);
 				// in the onPOSTComplete method of setpoint, we set a message to be displayed by alert, hence we need to reload the alert after the POST
-				setpoint.registerDependentWidget(alert);
+				setpoint.triggerAction(alert, TriggeringAction.POST_REQUEST, TriggeredAction.GET_REQUEST);
 				
 				// this widget displays the configured temperature setpoint for window open status in this room 
 				ValueInputField<Float> windowOpenSetpoint = new ValueInputField<Float>(page, "windowOpenSetpoint_" + lineId, Float.TYPE) {
