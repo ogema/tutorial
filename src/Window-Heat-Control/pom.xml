@@ -10,7 +10,7 @@
     <artifactId>window-heat-control</artifactId>
     <groupId>com.example.app</groupId>
     <name>Window-Heat-Control</name>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <description>window sensor test demo app v3</description>
     
     <packaging>bundle</packaging>

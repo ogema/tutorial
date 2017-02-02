@@ -12,16 +12,15 @@
 (org.osgi.framework.PackagePermission "org.json" "import")
 (org.osgi.framework.PackagePermission "org.slf4j" "import")
 
-# export custom resource types
-(org.osgi.framework.PackagePermission "com.example.app.template.config" "exportonly")
-
+(org.osgi.framework.PackagePermission "org.smartrplace.sim.simple.devices.*" "exportonly")
 # Resource permissions
-# all resource permissions for custom types
-(org.ogema.accesscontrol.ResourcePermission "type=com.example.app.template.config.TemplateConfig" "read,write,addsub,create,activity,delete")
-(org.ogema.accesscontrol.ResourcePermission "type=com.example.app.template.config.TemplateProgramConfig" "read,write,addsub,create,activity,delete")
-# Read permissions (at least) for pattern model types
-(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.sensors.TemperatureSensor" "read")
-(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.sensors.HumiditySensor" "read,write")
-# doPriviledged in simulation service
-#(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.tools.simulation.service.apiplus.SimulationConfigurationModel, path=/OGEMASimulationConfiguration" "read,write,create")
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.sensors.TemperatureSensor" "read,write,create,addsub,activity")
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.sensors.HumiditySensor" "read,write,create,addsub,activity")
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.sensors.DoorWindowSensor" "read,write,create,addsub,activity")
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.sensors.MotionSensor" "read,write,create,addsub,activity")
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.devices.sensoractordevices.SensorDevice" "read,write,create,addsub,activity")
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.devices.sensoractordevices.SingleSwitchBox" "read,write,create,addsub,activity")
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.devices.buildingtechnology.Thermostat" "read,write,create,addsub,activity")
+# TODO less generous permissions?
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.tools.simulation.service.apiplus.SimulationConfigurationModel,path=/OGEMASimulationConfiguration*" "read,write,create,addsub,activity")
 

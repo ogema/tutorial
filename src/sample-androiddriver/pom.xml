@@ -10,7 +10,7 @@
     <artifactId>sample-androiddriver</artifactId>
     <groupId>com.example</groupId>
     <name>Example Android Driver</name>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <description>Tutorial Android Driver</description>
     
     <packaging>bundle</packaging>

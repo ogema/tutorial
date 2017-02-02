@@ -12,6 +12,7 @@
     <packaging>bundle</packaging>
     <name>OGEMA Applications :: Widgets Overview</name>
     <description>Displays examples of the available OGEMA widgets</description>
+	<version>2.1.1-SNAPSHOT</version>
 
     <repositories>
 		<repository>

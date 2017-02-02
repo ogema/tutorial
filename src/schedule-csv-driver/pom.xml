@@ -11,7 +11,7 @@
     <artifactId>schedule-csv-driver</artifactId>
     <name>Schedule CSV file importer</name>
     <description>Driver Description</description>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     
     <packaging>bundle</packaging>
         

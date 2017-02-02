@@ -10,7 +10,7 @@
     <artifactId>sensor-app</artifactId>
     <groupId>com.example.app</groupId>
     <name>Sensor app</name>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <description>Sensor tutorial app</description>
     
     <packaging>bundle</packaging>
