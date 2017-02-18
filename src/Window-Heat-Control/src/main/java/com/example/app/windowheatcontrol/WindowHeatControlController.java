@@ -12,7 +12,6 @@ import org.ogema.core.resourcemanager.AccessPriority;
 import org.ogema.core.resourcemanager.pattern.ResourcePatternAccess;
 import org.ogema.model.locations.Room;
 
-import com.example.app.windowheatcontrol.api.internal.RoomController;
 import com.example.app.windowheatcontrol.api.internal.RoomManagement;
 import com.example.app.windowheatcontrol.config.RoomConfig;
 import com.example.app.windowheatcontrol.config.WindowHeatControlConfig;
@@ -36,14 +35,11 @@ public class WindowHeatControlController implements RoomManagement {
 	private final WindowHeatControlConfig appConfigData;
 	// keeps track of all rooms in the system which are equipped with at least one window sensor and thermostat, each.
 	// we access this from the GUI, hence we better use concurrent hash map (alternatively, synchronize access to roomControllers)
-	private final Map<Room, RoomController> roomControllers = new ConcurrentHashMap<>();
+	private final Map<Room, RoomLogic> roomControllers = new ConcurrentHashMap<>();
 	// keeps track of window sensor -> room associations
 	private final LinkingResourceManagement<Room, WindowSensorPattern> windowSensors;
 	// keeps track of thermostat -> room associations
 	private final LinkingResourceManagement<Room, ThermostatPattern> thermostats;
-	public final ElectricityStorageListener batteryListener;
-	private final ThermostatListener thermostatListener;
-	private final WindowSensorListener windowSensorListener;
 	
     public WindowHeatControlController(final ApplicationManager appMan) {
 		this.appMan = appMan;
@@ -59,6 +55,9 @@ public class WindowHeatControlController implements RoomManagement {
         initDemands();
 	}
     
+	public final ElectricityStorageListener batteryListener;
+	private final ThermostatListener thermostatListener;
+	private final WindowSensorListener windowSensorListener;
     
     private final void initDemands() {
     	 patternAccess.addPatternDemand(ElectricityStoragePattern.class, batteryListener, AccessPriority.PRIO_LOWEST);
@@ -70,7 +69,7 @@ public class WindowHeatControlController implements RoomManagement {
 		patternAccess.removePatternDemand(ElectricityStoragePattern.class, batteryListener);
 	   	patternAccess.removePatternDemand(ThermostatPattern.class, thermostatListener);
 	   	patternAccess.removePatternDemand(WindowSensorPattern.class, windowSensorListener);
-		for (RoomController controller: roomControllers.values()) {
+		for (RoomLogic controller: roomControllers.values()) {
 			controller.stop();
 		}
     }
@@ -97,7 +96,7 @@ public class WindowHeatControlController implements RoomManagement {
     @Override
     public List<Room> getActiveRooms() {
     	final List<Room> list = new ArrayList<>();
-    	for (RoomController c : roomControllers.values()) {
+    	for (RoomLogic c : roomControllers.values()) {
     		if (c.isActive())
     			list.add(c.getRoom());
     	}
@@ -105,9 +104,9 @@ public class WindowHeatControlController implements RoomManagement {
     }
 	
 	@Override
-    public RoomController getController(Room room) {
+    public RoomLogic getController(Room room) {
     	room = room.getLocationResource();
-    	RoomController controller = roomControllers.get(room);
+    	RoomLogic controller = roomControllers.get(room);
     	if (controller == null) {
     		// persistent controller configuration (type RoomConfig) may exist already from previous start,
     		// even if the controller is not active yet
@@ -125,7 +124,7 @@ public class WindowHeatControlController implements RoomManagement {
 	    		config.windowOpenTemperature().<TemperatureResource> create().setCelsius(appConfigData.defaultWindowOpenTemperature().getCelsius());
 	    		config.activate(true);
     		}
-    		controller = new RoomControllerImpl(config, 
+    		controller = new RoomLogic(config, 
     											thermostats.getSingleResourceManagement(room), 
     											windowSensors.getSingleResourceManagement(room), 
     											batteryListener);

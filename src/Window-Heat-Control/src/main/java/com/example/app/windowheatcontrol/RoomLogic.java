@@ -27,7 +27,7 @@ import de.iwes.util.linkingresource.LinkingManagementAccess;
  * closed again. When a window event is reported, it also checks whether a battery is available and fully charged, 
  * and if so, skips the temperature reduction.
  */
-public class RoomControllerImpl implements RoomController {
+public class RoomLogic implements RoomController {
 
 	private final static Logger logger = LoggerFactory.getLogger(WindowHeatControlApp.class);
 	// configuration resource for this controller; also references the room managed
@@ -43,7 +43,7 @@ public class RoomControllerImpl implements RoomController {
 	private volatile boolean active = false;
 	private volatile boolean windowOpen = false;
 	
-	public RoomControllerImpl(RoomConfig roomConfig,
+	public RoomLogic(RoomConfig roomConfig,
 					      LinkingManagementAccess<Room, ThermostatPattern> thermostats,
 					      LinkingManagementAccess<Room, WindowSensorPattern> windowSensors,
 					      ElectricityStorageListener batteryListener) {
