@@ -8,8 +8,8 @@ import org.ogema.core.model.units.TemperatureResource;
 import org.ogema.model.locations.Room;
 import org.ogema.tools.resource.util.ResourceUtils;
 
+import com.example.app.windowheatcontrol.RoomLogic;
 import com.example.app.windowheatcontrol.WindowHeatControlController;
-import com.example.app.windowheatcontrol.api.internal.RoomController;
 import com.example.app.windowheatcontrol.pattern.ElectricityStoragePattern;
 
 import de.iwes.widgets.api.widgets.WidgetPage;
@@ -107,7 +107,7 @@ public class MainPage {
 				row.addCell("roomname",name);
 				
 				// this widget displays the current temperature setpoint for the room (onGET), and allows the user to change it (onPOST)
-				final RoomController controller = appController.getController(room);
+				final RoomLogic controller = appController.getController(room);
 				ValueInputField<Float> setpoint = new ValueInputField<Float>(page, "setpoint_" + lineId, Float.TYPE) {
 
 					private static final long serialVersionUID = 1L;
