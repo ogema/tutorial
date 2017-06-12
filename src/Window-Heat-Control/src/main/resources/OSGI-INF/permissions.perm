@@ -18,6 +18,8 @@
 (org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.devices.buildingtechnology.Thermostat" "read,write")
 (org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.sensors.DoorWindowSensor" "read")
 (org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.locations.Room" "read")
+#(org.ogema.accesscontrol.ResourcePermission "type=*" "read")
 
 # custom types
 (org.osgi.framework.PackagePermission "com.example.app.windowheatcontrol.config" "exportonly")
+#(org.osgi.framework.PackagePermission "org.ogema.something" "exportonly")
