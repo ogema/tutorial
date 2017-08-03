@@ -15,6 +15,7 @@ import org.ogema.model.devices.sensoractordevices.SensorDevice;
 import org.ogema.tools.simulation.service.api.model.SimulatedQuantity;
 import org.ogema.tools.simulation.service.api.model.SimulationConfiguration;
 import org.ogema.tools.simulation.service.apiplus.SimulationBase;
+import org.smartrplace.sim.simple.devices.motiondetector.MotionDetectorPattern;
 import org.smartrplace.sim.simple.devices.sensordevice.quantities.BrightnessValue;
 import org.smartrplace.sim.simple.devices.sensordevice.quantities.CO2Value;
 import org.smartrplace.sim.simple.devices.sensordevice.quantities.HumidityValue;
@@ -59,8 +60,16 @@ public class SensorDeviceSimulation extends SimulationBase<SensorDeviceConfigura
 //				ResourceList<TemperatureSensor> base = am.getResourceManagement().createResource(BASE_RESOURCE_SIM_OBJECTS, ResourceList.class);
 //				base.setElementType(TemperatureSensor.class);
 //				tempSens = rpa.addDecorator(base,deviceId, TemperatureSensorPattern.class);
-				
-				pattern = resourcePatternAccess.createResource(deviceId, SensorDevicePattern.class);
+				if (deviceId.indexOf('/') > 0) {
+					final int i = deviceId.lastIndexOf('/');
+					Resource parent = appManager.getResourceAccess().getResource(deviceId.substring(0, i));
+					if (parent == null || !parent.exists()) 
+						throw new IllegalArgumentException("Specified parent resource " +deviceId.substring(0, i) + " does not exist");
+					pattern = resourcePatternAccess.addDecorator(parent, deviceId.substring(i+1), SensorDevicePattern.class);
+				}
+				else {
+					pattern = resourcePatternAccess.createResource(deviceId, SensorDevicePattern.class);
+				}
 				pattern.temperature.setCelsius(20F);
 //				if (tempSens == null) return null; 
 				pattern.model.name().create();

@@ -15,6 +15,7 @@ import org.ogema.tools.simulation.service.api.model.SimulatedQuantity;
 import org.ogema.tools.simulation.service.api.model.SimulationConfiguration;
 import org.ogema.tools.simulation.service.apiplus.SimulationBase;
 import org.smartrplace.sim.simple.devices.SimpleDevicesApp;
+import org.smartrplace.sim.simple.devices.switchbox.SwitchboxPattern;
 
 /**
  */
@@ -54,7 +55,16 @@ public class DoorWindowSensorSimulation extends SimulationBase<DoorWindowSensorC
 //				ResourceList<TemperatureSensor> base = am.getResourceManagement().createResource(BASE_RESOURCE_SIM_OBJECTS, ResourceList.class);
 //				base.setElementType(TemperatureSensor.class);
 //				tempSens = rpa.addDecorator(base,deviceId, TemperatureSensorPattern.class);
-				pattern = resourcePatternAccess.createResource(deviceId, DoorWindowSensorPattern.class);
+				if (deviceId.indexOf('/') > 0) {
+					final int i = deviceId.lastIndexOf('/');
+					Resource parent = appManager.getResourceAccess().getResource(deviceId.substring(0, i));
+					if (parent == null || !parent.exists()) 
+						throw new IllegalArgumentException("Specified parent resource " +deviceId.substring(0, i) + " does not exist");
+					pattern = resourcePatternAccess.addDecorator(parent, deviceId.substring(i+1), DoorWindowSensorPattern.class);
+				}
+				else {
+					pattern = resourcePatternAccess.createResource(deviceId, DoorWindowSensorPattern.class);
+				}
 				if (!pattern.stateOfChargeSensor.exists())
 					throw new VirtualResourceException("Resource unexpectedly found virtual: " + pattern.stateOfChargeSensor);
 //				if (tempSens == null) return null; 
