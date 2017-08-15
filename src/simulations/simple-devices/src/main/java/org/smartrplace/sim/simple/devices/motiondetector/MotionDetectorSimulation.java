@@ -12,6 +12,7 @@ import org.ogema.model.devices.sensoractordevices.SensorDevice;
 import org.ogema.tools.simulation.service.api.model.SimulatedQuantity;
 import org.ogema.tools.simulation.service.api.model.SimulationConfiguration;
 import org.ogema.tools.simulation.service.apiplus.SimulationBase;
+import org.smartrplace.sim.simple.devices.switchbox.SwitchboxPattern;
 
 /**
  */
@@ -52,8 +53,16 @@ public class MotionDetectorSimulation extends SimulationBase<MotionDetectorConfi
 //				ResourceList<TemperatureSensor> base = am.getResourceManagement().createResource(BASE_RESOURCE_SIM_OBJECTS, ResourceList.class);
 //				base.setElementType(TemperatureSensor.class);
 //				tempSens = rpa.addDecorator(base,deviceId, TemperatureSensorPattern.class);
-				
-				pattern = resourcePatternAccess.createResource(deviceId, MotionDetectorPattern.class);
+				if (deviceId.indexOf('/') > 0) {
+					final int i = deviceId.lastIndexOf('/');
+					Resource parent = appManager.getResourceAccess().getResource(deviceId.substring(0, i));
+					if (parent == null || !parent.exists()) 
+						throw new IllegalArgumentException("Specified parent resource " +deviceId.substring(0, i) + " does not exist");
+					pattern = resourcePatternAccess.addDecorator(parent, deviceId.substring(i+1), MotionDetectorPattern.class);
+				}
+				else {
+					pattern = resourcePatternAccess.createResource(deviceId, MotionDetectorPattern.class);
+				}
 //				if (tempSens == null) return null; 
 				pattern.model.name().create();
 //				switchBox.simulationProvider.setValue(PROVIDER_ID);

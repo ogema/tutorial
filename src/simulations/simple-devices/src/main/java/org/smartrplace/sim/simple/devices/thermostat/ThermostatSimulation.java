@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.ogema.core.application.ApplicationManager;
+import org.ogema.core.model.Resource;
 import org.ogema.core.model.units.TemperatureResource;
 import org.ogema.core.resourcemanager.AccessPriority;
 import org.ogema.core.resourcemanager.ResourceValueListener;
@@ -16,6 +17,7 @@ import org.ogema.tools.resource.util.ResourceUtils;
 import org.ogema.tools.simulation.service.api.SimulationProvider;
 import org.ogema.tools.simulation.service.api.model.SimulatedQuantity;
 import org.ogema.tools.simulation.service.api.model.SimulationConfiguration;
+import org.smartrplace.sim.simple.devices.doorwindowsensor.DoorWindowSensorPattern;
 
 /**
  * A simulated thermostat. Note: this basic simulation simply creates one or 
@@ -53,8 +55,18 @@ public class ThermostatSimulation implements SimulationProvider<Thermostat>, Pat
 
 	@Override
 	public Thermostat createSimulatedObject(String deviceId) {
+		ThermostatPattern pattern;
 		try {
-			ThermostatPattern pattern = am.getResourcePatternAccess().createResource(deviceId, ThermostatPattern.class);
+			if (deviceId.indexOf('/') > 0) {
+				final int i = deviceId.lastIndexOf('/');
+				Resource parent = am.getResourceAccess().getResource(deviceId.substring(0, i));
+				if (parent == null || !parent.exists()) 
+					throw new IllegalArgumentException("Specified parent resource " +deviceId.substring(0, i) + " does not exist");
+				pattern = am.getResourcePatternAccess().addDecorator(parent, deviceId.substring(i+1), ThermostatPattern.class);
+			}
+			else {
+				pattern = am.getResourcePatternAccess().createResource(deviceId, ThermostatPattern.class);
+			}
 			pattern.simulationProvider.setValue(PROVIDER_ID);
 			pattern.simulationActive.setValue(true);
 //			Room room = am.getResourceManagement().createResource(SimpleDevicesApp.ROOM_PATH, Room.class);

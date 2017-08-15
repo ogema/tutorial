@@ -57,8 +57,16 @@ public class SwitchboxSimulation extends SimulationBase<SwitchboxConfigurationPa
 		SwitchboxPattern switchBox = getTargetPattern(deviceId);		
 		if (switchBox == null) {
 			try {
-				switchBox = resourcePatternAccess.createResource(deviceId, SwitchboxPattern.class);
-				if (switchBox == null) return null; 
+				if (deviceId.indexOf('/') > 0) {
+					final int i = deviceId.lastIndexOf('/');
+					Resource parent = appManager.getResourceAccess().getResource(deviceId.substring(0, i));
+					if (parent == null || !parent.exists()) 
+						throw new IllegalArgumentException("Specified parent resource " +deviceId.substring(0, i) + " does not exist");
+					switchBox = resourcePatternAccess.addDecorator(parent, deviceId.substring(i+1), SwitchboxPattern.class);
+				}
+				else {
+					switchBox = resourcePatternAccess.createResource(deviceId, SwitchboxPattern.class);
+				}
 				switchBox.model.name().create();
 //				switchBox.simulationProvider.setValue(PROVIDER_ID);
 				switchBox.model.name().setValue("Simulated Switchbox" + (simulatedDevices.isEmpty() ? "" : " " + simulatedDevices.size()));
