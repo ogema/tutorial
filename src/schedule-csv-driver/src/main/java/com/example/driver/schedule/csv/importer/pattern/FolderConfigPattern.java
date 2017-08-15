@@ -50,7 +50,7 @@ public class FolderConfigPattern extends ResourcePattern<FolderConfiguration> {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("<ul>");
 		for (Schedule s: schedules) {
-			sb.append("<li>").append(s.getLocationResource()).append("<br>Values: ").append(s.getValues(Long.MIN_VALUE).size()); // FIXME replace by size() method
+			sb.append("<li>").append(s.getLocationResource().toString()).append("<br>Values: ").append(s.getValues(Long.MIN_VALUE).size()); // FIXME replace by size() method
 		}
 		sb.append("</li>");
 		return sb.toString();

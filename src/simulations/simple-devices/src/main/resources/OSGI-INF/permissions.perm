@@ -22,5 +22,6 @@
 (org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.devices.sensoractordevices.SingleSwitchBox" "read,write,create,addsub,activity")
 (org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.devices.buildingtechnology.Thermostat" "read,write,create,addsub,activity")
 # TODO less generous permissions?
-(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.tools.simulation.service.apiplus.SimulationConfigurationModel,path=/OGEMASimulationConfiguration*" "read,write,create,addsub,activity")
+(org.ogema.accesscontrol.ResourcePermission "type=org.ogema.tools.simulation.service.apiplus.SimulationConfigurationModel,path=/OGEMASimulationConfiguration" "read,write,create,addsub,activity")
+(org.ogema.accesscontrol.ResourcePermission "path=/OGEMASimulationConfiguration/*" "read,write,create,addsub,activity")
 

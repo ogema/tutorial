@@ -4,7 +4,7 @@
     <parent>
        <artifactId>apps-master</artifactId>
        <groupId>org.ogema.apps</groupId>
-       <version>2.1.1-alpha-20170612</version>
+       <version>2.1.1</version>
     </parent>
     
     <artifactId>hello-ogema</artifactId>

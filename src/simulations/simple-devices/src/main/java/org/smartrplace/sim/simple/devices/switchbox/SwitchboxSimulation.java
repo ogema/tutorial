@@ -149,7 +149,7 @@ public class SwitchboxSimulation extends SimulationBase<SwitchboxConfigurationPa
 		feedback.setValue(newValue);
 		// we must trigger a simTimerElapsed here!
 		
-		Timer timer = getTimer(resource.getParent().getParent());
+		Timer timer = getTimer((Resource) resource.getParent().getParent());
 		long intv = timer.getTimingInterval();
 		timer.stop();
 		Iterator<TimerListener> listeners = timer.getListeners().iterator();
