@@ -31,6 +31,14 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+					<instructions>
+						<Import-Package>
+                            org.json;version="[20160212,20170518)",
+                            *
+                        </Import-Package>
+					</instructions>
+				</configuration>
             </plugin>
         </plugins>
     </build>
