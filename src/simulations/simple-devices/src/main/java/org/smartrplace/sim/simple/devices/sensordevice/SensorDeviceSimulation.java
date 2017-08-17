@@ -78,7 +78,7 @@ public class SensorDeviceSimulation extends SimulationBase<SensorDeviceConfigura
 //				Room room = appManager.getResourceManagement().createResource(SimpleDevicesApp.ROOM_PATH, Room.class);
 //				room.activate(false);
 //				pattern.model.location().room().setAsReference(room);
-				logger.info("New switchbox created "+  pattern.model.name());
+				logger.info("New sensor device created "+  pattern.model.name());
 				super.addConfigResource(pattern, TEMPSENS_UPDATE_INTERVAL); // activates all resources
 //				switchBox.model.activate(true);  // done in addConfigResource already
 			} catch (ResourceAlreadyExistsException e) {

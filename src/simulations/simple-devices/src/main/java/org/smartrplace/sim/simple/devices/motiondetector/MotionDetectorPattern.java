@@ -25,7 +25,7 @@ public class MotionDetectorPattern extends ResourcePattern<SensorDevice> {
 	@Existence(required=CreateMode.OPTIONAL)
 	public final BooleanResource motion = motionSensor.reading();
 	
-	public final LightSensor brightnessSensor = sensors.getSubResource("brightnessSensor", LightSensor.class);
+	public final LightSensor brightnessSensor = sensors.getSubResource("lightSensor", LightSensor.class);
 	
 	@Existence(required=CreateMode.OPTIONAL)
 	public final BrightnessResource brightness = brightnessSensor.reading();
