@@ -13,7 +13,7 @@
 
 # resource permissions
 #(org.ogema.accesscontrol.ResourcePermission "type=com.example.app.windowheatcontrol.config.RoomConfig, path=/XXXX" "read,write,addsub,create,activity,delete")
-(org.ogema.accesscontrol.ResourcePermission "type=com.example.app.windowheatcontrol.config.WindowHeatControlConfig, path=WindowHeatControlConfig" "read,write,addsub,create,activity,delete")
+(org.ogema.accesscontrol.ResourcePermission "type=com.example.app.windowheatcontrol.config.WindowHeatControlConfig, path=windowHeatControlConfig" "read,write,addsub,create,activity,delete")
 (org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.devices.storage.ElectricityStorage" "read")
 (org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.devices.buildingtechnology.Thermostat" "read,write")
 (org.ogema.accesscontrol.ResourcePermission "type=org.ogema.model.sensors.DoorWindowSensor" "read")
