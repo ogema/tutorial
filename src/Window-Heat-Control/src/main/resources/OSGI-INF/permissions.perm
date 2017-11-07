@@ -10,6 +10,7 @@
 (org.osgi.framework.PackagePermission "de.iwes.tools.*" "import")
 (org.osgi.framework.PackagePermission "de.iwes.util.*" "import")
 (org.osgi.framework.PackagePermission "org.slf4j" "import")
+(org.ogema.accesscontrol.WebAccessPermission "name=de.iwes.widgets.ogema-js-bundle")
 
 # resource permissions
 #(org.ogema.accesscontrol.ResourcePermission "type=com.example.app.windowheatcontrol.config.RoomConfig, path=/XXXX" "read,write,addsub,create,activity,delete")
