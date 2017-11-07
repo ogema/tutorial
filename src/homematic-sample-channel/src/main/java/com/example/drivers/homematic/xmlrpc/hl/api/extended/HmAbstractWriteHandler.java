@@ -1,9 +1,11 @@
 package com.example.drivers.homematic.xmlrpc.hl.api.extended;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import org.ogema.core.model.Resource;
+import org.ogema.core.model.ResourceList;
 import org.ogema.core.model.simple.BooleanResource;
 import org.ogema.core.model.simple.FloatResource;
 import org.ogema.core.model.simple.IntegerResource;
@@ -14,6 +16,7 @@ import org.ogema.drivers.homematic.xmlrpc.hl.api.HomeMaticConnection;
 import org.ogema.drivers.homematic.xmlrpc.hl.types.HmDevice;
 import org.ogema.drivers.homematic.xmlrpc.ll.api.DeviceDescription;
 import org.ogema.drivers.homematic.xmlrpc.ll.api.ParameterDescription;
+import org.ogema.model.devices.buildingtechnology.Thermostat;
 
 /** Note: We assume that every device has at least one channel to read, so an AbstractWriteHandler
  * always extends ReadHandler
@@ -65,6 +68,53 @@ public abstract class HmAbstractWriteHandler<T extends Resource> extends HmAbstr
 	            }            
 	        }, true);
         }
+    }
+	
+    public class ParameterListener implements ResourceValueListener<SingleValueResource> {
+        
+        final String address;
+
+        public ParameterListener(String address) {
+            this.address = address;
+        }        
+
+        @Override
+        public void resourceChanged(SingleValueResource resource) {
+            String paramName = resource.getName();
+            
+            Object resourceValue = null;
+            if (resource instanceof IntegerResource) {
+                resourceValue = ((IntegerResource) resource).getValue();
+            } else {
+                logger.warn("unsupported parameter type: " + resource);
+            }
+            
+            Map<String, Object> parameterSet = new HashMap<>();
+            parameterSet.put(paramName, resourceValue);
+            conn.performPutParamset(address, "MASTER", parameterSet);
+            logger.info("Parameter set 'MASTER' updated for {}: {}", address, parameterSet);
+        }
+        
+    };
+    
+    protected <S extends SingleValueResource> void setupHmParameterValue(Thermostat thermos, String address,
+    		String parameterName, Class<S> valueResourceType) {
+        //XXX address mangling (parameters are set on device, not channel)
+        if (address.lastIndexOf(":") != -1) {
+            address = address.substring(0, address.lastIndexOf(":"));
+        }
+        @SuppressWarnings("unchecked")
+        ResourceList<SingleValueResource> masterParameters = thermos.addDecorator("HmParametersMaster", ResourceList.class);
+        if (!masterParameters.exists()) {
+            masterParameters.setElementType(SingleValueResource.class);
+            masterParameters.create();
+        }
+        S tf_modus = masterParameters.getSubResource(parameterName, valueResourceType);
+        ParameterListener l = new ParameterListener(address);
+        if (tf_modus.isActive()) { //send active parameter on startup
+            l.resourceChanged(tf_modus);
+        }
+        tf_modus.addValueListener(l, true);
     }
 
 }

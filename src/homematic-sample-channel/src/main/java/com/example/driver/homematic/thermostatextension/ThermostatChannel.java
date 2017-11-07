@@ -15,16 +15,13 @@
  */
 package com.example.driver.homematic.thermostatextension;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.ogema.core.model.Resource;
-import org.ogema.core.model.ResourceList;
 import org.ogema.core.model.simple.IntegerResource;
 import org.ogema.core.model.simple.SingleValueResource;
 import org.ogema.core.resourcemanager.ResourceStructureEvent;
 import org.ogema.core.resourcemanager.ResourceStructureListener;
-import org.ogema.core.resourcemanager.ResourceValueListener;
 import org.ogema.drivers.homematic.xmlrpc.hl.api.HomeMaticConnection;
 import org.ogema.drivers.homematic.xmlrpc.hl.types.HmDevice;
 import org.ogema.drivers.homematic.xmlrpc.ll.api.DeviceDescription;
@@ -153,50 +150,8 @@ public class ThermostatChannel extends HmAbstractWriteHandler<Thermostat> {
         setupTempSensLinking(thermos);
     }
     
-    class ParameterListener implements ResourceValueListener<SingleValueResource> {
-        
-        final String address;
-
-        public ParameterListener(String address) {
-            this.address = address;
-        }        
-
-        @Override
-        public void resourceChanged(SingleValueResource resource) {
-            String paramName = resource.getName();
-            
-            Object resourceValue = null;
-            if (resource instanceof IntegerResource) {
-                resourceValue = ((IntegerResource) resource).getValue();
-            } else {
-                logger.warn("unsupported parameter type: " + resource);
-            }
-            
-            Map<String, Object> parameterSet = new HashMap<>();
-            parameterSet.put(paramName, resourceValue);
-            conn.performPutParamset(address, "MASTER", parameterSet);
-            logger.info("Parameter set 'MASTER' updated for {}: {}", address, parameterSet);
-        }
-        
-    };
-    
     private void setupHmParameterValues(Thermostat thermos, String address) {
-        //XXX address mangling (parameters are set on device, not channel)
-        if (address.lastIndexOf(":") != -1) {
-            address = address.substring(0, address.lastIndexOf(":"));
-        }
-        @SuppressWarnings("unchecked")
-        ResourceList<SingleValueResource> masterParameters = thermos.addDecorator("HmParametersMaster", ResourceList.class);
-        if (!masterParameters.exists()) {
-            masterParameters.setElementType(SingleValueResource.class);
-            masterParameters.create();
-        }
-        IntegerResource tf_modus = masterParameters.getSubResource(PARAM_TEMPERATUREFALL_MODUS, IntegerResource.class);
-        ParameterListener l = new ParameterListener(address);
-        if (tf_modus.isActive()) { //send active parameter on startup
-            l.resourceChanged(tf_modus);
-        }
-        tf_modus.addValueListener(l, true);
+        setupHmParameterValue(thermos, address, PARAM_TEMPERATUREFALL_MODUS, IntegerResource.class);
     }
     
     private void linkTempSens(Thermostat thermos, TemperatureSensor tempSens) {
