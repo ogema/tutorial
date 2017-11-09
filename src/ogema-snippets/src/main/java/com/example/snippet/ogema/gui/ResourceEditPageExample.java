@@ -41,13 +41,13 @@ public class ResourceEditPageExample extends ResourceEditPage<Thermostat> {
 		int c = 0;
 		//Note: The names of the sub-elements of thermostat have to be given here as Strings
 		table.setContent(c, 0, "Temperaturefall Modus").
-			setContent(c, 1, mh.stringLabel("HmParametersMaster.TEMPERATUREFALL_MODUS"));
+			setContent(c, 1, mh.intLabel("HmParametersMaster.TEMPERATUREFALL_MODUS", 0));
 		c++; //2
 		table.setContent(c, 0, "Setpoint:").
 			setContent(c, 1, mh.booleanEdit("temperatureSensor.settings.setpoint"));
 		c++;
 		table.setContent(c, 0, "Current valve position (0..1):").
-			setContent(c, 1, mh.floatLabel("item.valve.setting.stateFeedback", "%.2f"));
+			setContent(c, 1, mh.floatLabel("valve.setting.stateFeedback", "%.2f"));
 		page.append(table);
 		
 		Button reCalcButton = new Button(page, "boostButton", "Start Boost mode") {
