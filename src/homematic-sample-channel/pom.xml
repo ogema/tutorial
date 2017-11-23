@@ -9,8 +9,8 @@
     
     <groupId>com.example.driver</groupId>
     <artifactId>homematic-sample-channel</artifactId>
-    <name>Schedule CSV file importer</name>
-    <description>Driver Description</description>
+    <name>Homematic sample channel</name>
+    <description>An extension of the OGEMA Homematic XML-RPC driver</description>
     <version>1.0.1-SNAPSHOT</version>
     
     <packaging>bundle</packaging>

@@ -26,6 +26,7 @@
   <!-- Sub-projects -->
     <modules>
 		<module>hello-ogema</module>
+		<module>homematic-sample-channel</module>
 		<module>sample-androiddriver</module>
 		<module>schedule-csv-driver</module>
 		<module>sensor-app</module>
