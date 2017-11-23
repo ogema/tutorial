@@ -14,6 +14,7 @@ import de.iwes.widgets.api.widgets.sessionmanagement.OgemaHttpRequest;
 import de.iwes.widgets.html.schedulemanipulator.ScheduleManipulatorConfiguration;
 import de.iwes.widgets.reswidget.scheduleviewer.ScheduleViewerBasic;
 import de.iwes.widgets.reswidget.scheduleviewer.api.ScheduleViewerConfiguration;
+import de.iwes.widgets.reswidget.scheduleviewer.api.ScheduleViewerConfigurationBuilder;
 
 /**
  * Simple page providing a widget of type {@link ScheduleViewerBasic}. The widgets displays hard coded schedules
@@ -27,7 +28,9 @@ public class ScheduleViewerWidgetMinimal {
 			final List<String> schedulePaths) {
 
 		ScheduleManipulatorConfiguration maipulatorConfig = new ScheduleManipulatorConfiguration(null, true, true);
-		ScheduleViewerConfiguration config = new ScheduleViewerConfiguration(true, true, false, true, maipulatorConfig, true, null, null, null, null, 24*60*60*1000L);
+		//ScheduleViewerConfiguration config = new ScheduleViewerConfiguration(true, true, false, true, maipulatorConfig, true, null, null, null, null, 24*60*60*1000L);
+		ScheduleViewerConfiguration config = ScheduleViewerConfigurationBuilder.newBuilder().
+				setShowManipulator(true).setShowCsvDownload(true).setManipulatorConfiguration(maipulatorConfig).build(); //true, true, false, true, maipulatorConfig, true, null, null, null, null, 24*60*60*1000L);
         ScheduleViewerBasic<?> viewerWidget = new ScheduleViewerBasic<ReadOnlyTimeSeries>(page, "viewerWidget",
         		appMan, config, null) {
  			private static final long serialVersionUID = 1L;

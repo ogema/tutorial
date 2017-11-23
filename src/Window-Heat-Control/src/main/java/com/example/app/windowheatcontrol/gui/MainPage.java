@@ -12,6 +12,7 @@ import com.example.app.windowheatcontrol.RoomLogic;
 import com.example.app.windowheatcontrol.WindowHeatControlController;
 import com.example.app.windowheatcontrol.pattern.ElectricityStoragePattern;
 
+import de.iwes.widgets.api.extended.WidgetData;
 import de.iwes.widgets.api.widgets.WidgetPage;
 import de.iwes.widgets.api.widgets.dynamics.TriggeredAction;
 import de.iwes.widgets.api.widgets.dynamics.TriggeringAction;
@@ -21,7 +22,6 @@ import de.iwes.widgets.html.alert.Alert;
 import de.iwes.widgets.html.complextable.DynamicTable;
 import de.iwes.widgets.html.complextable.RowTemplate;
 import de.iwes.widgets.html.form.label.Header;
-import de.iwes.widgets.html.form.label.HeaderData;
 import de.iwes.widgets.html.form.label.Label;
 import de.iwes.widgets.html.form.textfield.ValueInputField;
 import de.iwes.widgets.object.widget.table.DefaultObjectRowTemplate;
@@ -50,7 +50,7 @@ public class MainPage {
 		//init all widgets
 		
 		header = new Header(page, "header", "Battery-extended Window-Heat Control");
-		header.addDefaultStyle(HeaderData.CENTERED);
+		header.addDefaultStyle(WidgetData.TEXT_ALIGNMENT_CENTERED);
 		
 		// displays messages to the user
 		alert = new Alert(page, "alert", "");
@@ -77,7 +77,7 @@ public class MainPage {
 				appController.getDefaultWindowOpenTemperatureSetting());
 		
 		this.roomsHeader = new Header(page, "roomsheader", "Controlled rooms");
-		roomsHeader.addDefaultStyle(HeaderData.CENTERED);
+		roomsHeader.addDefaultStyle(WidgetData.TEXT_ALIGNMENT_CENTERED);
 		roomsHeader.setDefaultHeaderType(2);
 		
 		// the roomTable widget below shows one table row per room; here we define the row content

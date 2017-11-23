@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.json.JSONArray;
 import org.ogema.tools.resource.util.ResourceUtils;
 
+import de.iwes.widgets.api.extended.WidgetData;
 import de.iwes.widgets.api.extended.html.bricks.PageSnippet;
 import de.iwes.widgets.api.extended.html.bricks.SampleImages;
 import de.iwes.widgets.api.widgets.WidgetPage;
@@ -45,7 +46,6 @@ import de.iwes.widgets.html.form.checkbox.SimpleCheckbox;
 import de.iwes.widgets.html.form.dropdown.Dropdown;
 import de.iwes.widgets.html.form.dropdown.DropdownOption;
 import de.iwes.widgets.html.form.label.Header;
-import de.iwes.widgets.html.form.label.HeaderData;
 import de.iwes.widgets.html.form.label.Label;
 import de.iwes.widgets.html.form.slider.Slider;
 import de.iwes.widgets.html.form.textfield.TextField;
@@ -68,7 +68,7 @@ public class StartPageBuilder {
 	public StartPageBuilder(final WidgetPage<?> page) {
 		
 		Header header = new Header(page, "header", "Widgets overview");
-		header.addDefaultStyle(HeaderData.CENTERED);
+		header.addDefaultStyle(WidgetData.TEXT_ALIGNMENT_CENTERED);
 		page.append(header).linebreak();
 		
 		// Button
@@ -482,7 +482,7 @@ public class StartPageBuilder {
 		page.append(table).linebreak();
 			
 		Header tableHeader = new Header(page, "tableHeader", "DynamicTable with variable number of rows");
-		tableHeader.addDefaultStyle(HeaderData.CENTERED);
+		tableHeader.addDefaultStyle(WidgetData.TEXT_ALIGNMENT_CENTERED);
 		tableHeader.setDefaultHeaderType(2);
 		StaticTable buttonTable = new StaticTable(1, 2, new int[] {1,1}); 
 		buttonTable.addStyle(HtmlStyle.ALIGNED_LEFT); // FIXME not working
