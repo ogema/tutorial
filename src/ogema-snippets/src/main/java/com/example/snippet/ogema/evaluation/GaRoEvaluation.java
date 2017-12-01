@@ -4,28 +4,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.ogema.core.timeseries.ReadOnlyTimeSeries;
 
 import de.iwes.timeseries.eval.api.EvaluationInput;
+import de.iwes.timeseries.eval.api.EvaluationInstance;
+import de.iwes.timeseries.eval.api.EvaluationResult;
 import de.iwes.timeseries.eval.api.ResultType;
 import de.iwes.timeseries.eval.api.TimeSeriesData;
 import de.iwes.timeseries.eval.api.configuration.ConfigurationInstance;
+import de.iwes.timeseries.eval.api.helper.EvalHelperExtended;
 import de.iwes.timeseries.eval.base.provider.utils.EvaluationInputImpl;
 import de.iwes.timeseries.eval.base.provider.utils.EvaluationUtils;
 import de.iwes.timeseries.eval.base.provider.utils.TimeSeriesDataImpl;
+import de.iwes.timeseries.eval.garo.api.helper.GaRoEvalHelper;
 import de.iwes.timeseries.winopen.provider.WinHeatEvalProvider;
 
 /** Example how to start GaRo evaluation
  * @param evalProvider this can just be a new instance of your evaluation provider
- * @param configurations can be null(?) or empty
+ * @param configurations can be null or empty
  *
  */
 public class GaRoEvaluation {
-	public static void runSampleEvaluationOffline(ReadOnlyTimeSeries temperatureMeasurementLogData,
+	public static Map<String, String> runSampleEvaluationOffline(ReadOnlyTimeSeries temperatureMeasurementLogData,
 			ReadOnlyTimeSeries windowOpenLogDataWindow1, ReadOnlyTimeSeries windowOpenLogDataWindow2,
 			ReadOnlyTimeSeries valvePositionLogData, String label, String description,
-			WinHeatEvalProvider evalProvider,
+			WinHeatEvalProvider evalProvider, long startTime, long endTime,
 			Collection<ConfigurationInstance> configurations) {
 		//Requested input 1 of EvaluProvider: temperature data
 		final List<TimeSeriesData> timeSeriesDataTemperature = new ArrayList<>();
@@ -59,7 +64,18 @@ public class GaRoEvaluation {
 		/**Change this if not all results offered by the provider shall be calculated*/
 		List<ResultType> requestedResults = evalProvider.resultTypes();
 		
+		/**Provide start end end time with configurations*/
+		Collection<ConfigurationInstance> configurationsAll = EvalHelperExtended.addStartEndTime(startTime, endTime, null);
+		if(configurations != null) configurationsAll.addAll(configurations);
+		
 		/**Finally start evaluation*/
-		EvaluationUtils.performEvaluationBlocking(evalProvider, inputs, requestedResults , configurations);
+		EvaluationInstance instance = EvaluationUtils.performEvaluationBlocking(evalProvider, inputs, requestedResults , configurationsAll);
+
+		/**Get results*/
+		final Map<ResultType, EvaluationResult> results = instance.getResults();
+		
+		GaRoEvalHelper.printAllResults("Room_"+label, results, EvaluationUtils.getStartAndEndTime(configurationsAll, inputs, false));
+		Map<String, String> evalResults = EvalHelperExtended.getResults(instance);
+		return evalResults;
 	}
 }
