@@ -6,10 +6,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.ogema.core.channelmanager.measurements.SampledValue;
+import org.ogema.core.model.schedule.Schedule;
 import org.ogema.core.timeseries.ReadOnlyTimeSeries;
 
 import de.iwes.timeseries.eval.api.EvaluationInput;
 import de.iwes.timeseries.eval.api.EvaluationInstance;
+import de.iwes.timeseries.eval.api.EvaluationInstance.ResultListener;
 import de.iwes.timeseries.eval.api.EvaluationResult;
 import de.iwes.timeseries.eval.api.ResultType;
 import de.iwes.timeseries.eval.api.TimeSeriesData;
@@ -24,6 +27,7 @@ import de.iwes.timeseries.winopen.provider.WinHeatEvalProvider;
 /** Example how to start GaRo evaluation
  * @param evalProvider this can just be a new instance of your evaluation provider
  * @param configurations can be null or empty
+ * @param resultSchedule should be null if evaluation does not support intermediate ResultListeners
  *
  */
 public class GaRoEvaluation {
@@ -31,7 +35,8 @@ public class GaRoEvaluation {
 			ReadOnlyTimeSeries windowOpenLogDataWindow1, ReadOnlyTimeSeries windowOpenLogDataWindow2,
 			ReadOnlyTimeSeries valvePositionLogData, String label, String description,
 			WinHeatEvalProvider evalProvider, long startTime, long endTime,
-			Collection<ConfigurationInstance> configurations) {
+			Collection<ConfigurationInstance> configurations,
+			Schedule resultSchedule) {
 		//Requested input 1 of EvaluProvider: temperature data
 		final List<TimeSeriesData> timeSeriesDataTemperature = new ArrayList<>();
 		TimeSeriesDataImpl dataImpl = new TimeSeriesDataImpl(temperatureMeasurementLogData, label+"_Room-Temperature", 
@@ -68,9 +73,24 @@ public class GaRoEvaluation {
 		Collection<ConfigurationInstance> configurationsAll = EvalHelperExtended.addStartEndTime(startTime, endTime, null);
 		if(configurations != null) configurationsAll.addAll(configurations);
 		
-		/**Finally start evaluation*/
-		EvaluationInstance instance = EvaluationUtils.performEvaluationBlocking(evalProvider, inputs, requestedResults , configurationsAll);
+		/**Note that most evaluations do not support intermediateListeners. See 
+		 * git\fhg-alliance-internal\src\widgets\timeseries-tools\timeseries-heating-analysis-multi\src\main\java\de\iwes\timeseries\provider\outsideTemperature
+		 * for an example that supports this
+		 */
+		ResultListener intermediateListener = null;
+		if(resultSchedule != null) {
+			intermediateListener = new ResultListener() {
 
+				@Override
+				public void resultAvailable(ResultType type, SampledValue value) {
+					resultSchedule.addValue(value.getTimestamp(), value.getValue());
+				}
+				
+			};
+		}
+		/**Finally start evaluation*/
+		EvaluationInstance instance = EvaluationUtils.performEvaluationBlocking(evalProvider, inputs, requestedResults , configurationsAll, intermediateListener);
+		
 		/**Get results*/
 		final Map<ResultType, EvaluationResult> results = instance.getResults();
 		
