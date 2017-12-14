@@ -18,6 +18,7 @@ public class SensorAppController {
     private ResourcePatternAccess advAcc;
 
 	public SensorListener sensorListener;
+	public IntegerResource nrSensors;
     
 	public SensorAppController(ApplicationManager appMan) {
 		this.appMan = appMan;
@@ -33,8 +34,6 @@ public class SensorAppController {
 
          initDemands();
     }
-
-	public IntegerResource nrSensors;
 
     /*
      * register ResourcePatternDemands. The listeners will be informed about new and disappearing
