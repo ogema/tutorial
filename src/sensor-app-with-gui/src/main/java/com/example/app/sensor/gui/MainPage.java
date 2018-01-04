@@ -13,8 +13,8 @@ import org.smartrplace.util.directresourcegui.ResourceGUITablePage;
 
 import com.example.app.sensor.pattern.SensorPattern;
 
-import de.iwes.util.logconfig.LogHelper;
-import de.iwes.util.logconfig.LogHelper.DeviceInfo;
+import de.iwes.util.resource.ResourceHelper;
+import de.iwes.util.resource.ResourceHelper.DeviceInfo;
 import de.iwes.widgets.api.extended.WidgetData;
 import de.iwes.widgets.api.widgets.WidgetPage;
 import de.iwes.widgets.api.widgets.sessionmanagement.OgemaHttpRequest;
@@ -53,7 +53,7 @@ public class MainPage extends ResourceGUITablePage<Sensor> {
 			final ResourceGUIHelper<Sensor> vh, final String id, OgemaHttpRequest req, Row row,
 			ApplicationManager appMan) {
 		vh.stringLabel("Location", id, object.getLocation(), row);
-		DeviceInfo devInfo = object!=null?LogHelper.getDeviceInformation(object):null;
+		DeviceInfo devInfo = object!=null?ResourceHelper.getDeviceInformation(object):null;
 		vh.stringLabel("Device name", id, devInfo!=null?devInfo.getDeviceName():"-", row);
 		vh.stringLabel("Value", id, ValueResourceUtils.getValue((SingleValueResource)object.reading()), row);
 	}
