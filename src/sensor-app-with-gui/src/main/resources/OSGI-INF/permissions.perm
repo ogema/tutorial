@@ -4,6 +4,7 @@
 (org.osgi.framework.PackagePermission "org.ogema.core.*" "import")
 (org.osgi.framework.PackagePermission "org.ogema.model.*" "import")
 (org.osgi.framework.PackagePermission "org.ogema.pattern.*" "import")
+(org.osgi.framework.PackagePermission "org.ogema.tools.*" "import")
 (org.osgi.framework.PackagePermission "org.osgi.framework" "import")
 (org.osgi.framework.PackagePermission "org.slf4j" "import")
 (org.osgi.framework.PackagePermission "de.iwes.widgets.*" "import")
