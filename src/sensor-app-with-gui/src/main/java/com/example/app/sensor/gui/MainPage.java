@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ogema.core.application.ApplicationManager;
+import org.ogema.core.model.ValueResource;
 import org.ogema.core.model.simple.SingleValueResource;
 import org.ogema.core.resourcemanager.AccessPriority;
 import org.ogema.model.sensors.Sensor;
@@ -37,6 +38,7 @@ public class MainPage extends ResourceGUITablePage<Sensor> {
 		Header header = new Header(page, "header", "Organizations in Appstore Admin GUI");
 		header.addDefaultStyle(WidgetData.TEXT_ALIGNMENT_CENTERED);
 		page.append(header);		
+		System.out.println("......................... addWidgetsAboveTable called.");
 	}
 	@Override
 	public List<Sensor> getResourcesInTable(OgemaHttpRequest req) {
@@ -45,6 +47,7 @@ public class MainPage extends ResourceGUITablePage<Sensor> {
 		for(SensorPattern pat: patterns) {
 			result.add(pat.model);
 		}
+		System.out.println("......................... getResourcesInTable called.");
 		return result;
 	}
 	
@@ -55,6 +58,11 @@ public class MainPage extends ResourceGUITablePage<Sensor> {
 		vh.stringLabel("Location", id, object.getLocation(), row);
 		DeviceInfo devInfo = object!=null?ResourceHelper.getDeviceInformation(object):null;
 		vh.stringLabel("Device name", id, devInfo!=null?devInfo.getDeviceName():"-", row);
-		vh.stringLabel("Value", id, ValueResourceUtils.getValue((SingleValueResource)object.reading()), row);
+
+		if(object.isActive() && object.reading().isActive())
+			vh.stringLabel("Value", id, ValueResourceUtils.getValue((ValueResource) object.reading()).toString(), row);
+		else 
+			vh.stringLabel("Value", id, "-", row);
+		System.out.println("......................... addWidgets called.");
 	}
 }
