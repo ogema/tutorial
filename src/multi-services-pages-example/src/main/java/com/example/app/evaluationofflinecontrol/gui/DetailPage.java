@@ -45,7 +45,7 @@ public class DetailPage {
 		};
 		page.append(init);
 		
-		Header header = new Header(page, "header", "Multi Service Detail Page");
+		Header header = new Header(page, "header", "Multi-Service Detail Page");
 		header.addDefaultStyle(WidgetData.TEXT_ALIGNMENT_LEFT);
 		page.append(header);
 		
