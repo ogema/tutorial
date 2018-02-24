@@ -16,6 +16,7 @@ import org.ogema.core.logging.OgemaLogger;
 
 import com.example.app.evaluationofflinecontrol.gui.DetailPage;
 import com.example.app.evaluationofflinecontrol.gui.MainPage;
+import com.example.app.evaluationofflinecontrol.gui.complex.ComplexDependencyExamplePage;
 
 import de.iwes.timeseries.eval.api.EvaluationProvider;
 import de.iwes.timeseries.eval.base.provider.BasicEvaluationProvider;
@@ -52,7 +53,8 @@ public class MultiServicePageApp implements Application {
 	private OgemaGuiService guiService;
 	
 	public MainPage mainPage;
-	public DetailPage offlineEval;
+	public DetailPage offlineEvalPage;
+	public ComplexDependencyExamplePage complexExamplePage;
 	
 	private final Map<String,EvaluationProvider> evaluationProviders = Collections.synchronizedMap(new LinkedHashMap<String,EvaluationProvider>());
 	public Map<String, EvaluationProvider> getEvaluations() {
@@ -79,15 +81,22 @@ public class MultiServicePageApp implements Application {
 		WidgetPage<?> page = widgetApp.createStartPage();
 		mainPage = new MainPage(page, controller);
 		WidgetPage<?> page1 = widgetApp.createWidgetPage("Details.html");
-		offlineEval = new DetailPage(page1, controller);
-		
+		offlineEvalPage = new DetailPage(page1, controller);
+
+		//This entry can be deleted if the complex page example is removed
+		WidgetPage<?> page2 = widgetApp.createWidgetPage("ComplexExample.html");
+		complexExamplePage = new ComplexDependencyExamplePage(page2, controller);
+
 		NavigationMenu menu = new NavigationMenu("Select Page");
 		menu.addEntry("Overview Page", page);
 		menu.addEntry("Details Page", page1);
+		menu.addEntry("Complex Example Page", page2);
 		
 		MenuConfiguration mc = page.getMenuConfiguration();
 		mc.setCustomNavigation(menu);
 		mc = page1.getMenuConfiguration();
+		mc.setCustomNavigation(menu);
+		mc = page2.getMenuConfiguration();
 		mc.setCustomNavigation(menu);
      }
 
