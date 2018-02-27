@@ -377,7 +377,7 @@ public class ComplexDependencyExamplePage {
 		table1.setContent(i, 0, preEvalLabel2 );
 		table1.setContent(i, 1, selectPreEval2  );
 		i++;
-		table1.setContent(i, 0, "Evaluation Acronym");
+		table1.setContent(i, 0, "Result File Name");
 		table1.setContent(i, 1, evaluationResultFileName);
 		i++; //10
 		table1.setContent(i, 0, startOfflineEval );
