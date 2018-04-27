@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+       <artifactId>apps-master</artifactId>
+       <groupId>org.ogema.apps</groupId>
+       <version>2.1.3</version>
+    </parent>
+    
+    <artifactId>evaluation-provider-example</artifactId>
+    <groupId>com.example.eval</groupId>
+    <name>Evaluation Provider Examples</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <description>Evaluation Provider Examples for OGEMA</description>
+    
+    <packaging>bundle</packaging>
+    
+    <repositories>
+    	<repository>
+		    <id>ogema-release</id>
+		    <name>ogema-release</name>
+		    <url>https://www.ogema-source.net/artifactory/libs-release</url>
+   		</repository>
+    </repositories>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ogema.core</groupId>
+            <artifactId>api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ogema.core</groupId>
+            <artifactId>models</artifactId>
+        </dependency>
+        <!-- <dependency>
+            <groupId>de.iwes.widgets</groupId>
+            <artifactId>widget-collection-util</artifactId>
+        </dependency>
+         -->
+         <dependency>
+            <groupId>de.iwes.widgets</groupId>
+            <artifactId>ogema-js-bundle</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.iwes.widgets</groupId>
+            <artifactId>widget-collection</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.smartrplace.apps</groupId>
+            <artifactId>smartrplace-util-proposed</artifactId>
+            <version>2.1.3-SNAPSHOT</version>
+        </dependency>
+ 		<dependency>
+            <groupId>de.iwes.tools</groupId>
+            <artifactId>timeseries-multieval-garo-base</artifactId>
+            <version>2.1.4-SNAPSHOT</version>
+        </dependency>
+        <!--  Note that dependency on this evaluation application is only for the purpose of the example, your code should
+        not have this dependency -->  
+        <dependency>
+            <groupId>de.iwes.tools</groupId>
+            <artifactId>timeseries-energy-analysis-multi</artifactId>
+            <version>2.1.4-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>de.iwes.widgets</groupId>
+            <artifactId>widget-exam-base</artifactId>
+            <scope>test</scope>
+        </dependency>
+   </dependencies>
+</project>
