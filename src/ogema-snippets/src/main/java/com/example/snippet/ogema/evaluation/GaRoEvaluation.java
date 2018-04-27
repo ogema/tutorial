@@ -24,7 +24,7 @@ import de.iwes.timeseries.eval.base.provider.utils.EvaluationInputImpl;
 import de.iwes.timeseries.eval.base.provider.utils.EvaluationUtils;
 import de.iwes.timeseries.eval.base.provider.utils.TimeSeriesDataImpl;
 import de.iwes.timeseries.eval.base.provider.utils.TimeSeriesDataOnlineImpl;
-import de.iwes.timeseries.eval.garo.api.helper.GaRoEvalHelper;
+import de.iwes.timeseries.eval.garo.api.helper.base.GaRoEvalHelper;
 import de.iwes.timeseries.eval.onlineIterator.OnlineNonBlockingIterator;
 import de.iwes.timeseries.winopen.provider.WinHeatEvalProvider;
 
