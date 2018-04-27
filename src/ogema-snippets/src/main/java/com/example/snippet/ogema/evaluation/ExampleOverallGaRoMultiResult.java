@@ -35,10 +35,10 @@ public class ExampleOverallGaRoMultiResult extends GaRoMultiResultExtended {
 	public float generalOutsideTemperatureAv;
 	FloatTimeSeries generalOutsideTemperature;
 	public EfficientTimeSeriesArray getGeneralOutsideTemperatureValues() {
-		return EfficientTimeSeriesArray.getValue(generalOutsideTemperature);
+		return EfficientTimeSeriesArray.getInstance(generalOutsideTemperature);
 	}
 	public void setGeneralOutsideTemperatureValues(EfficientTimeSeriesArray value) {
-		generalOutsideTemperature = EfficientTimeSeriesArray.setValue(value);
+		generalOutsideTemperature = value.toFloatTimeSeries(); //EfficientTimeSeriesArray.setValue(value);
 	}
 	public FloatTimeSeries nonForJsonGeneralOutsideTemperature() {
 		return generalOutsideTemperature;
