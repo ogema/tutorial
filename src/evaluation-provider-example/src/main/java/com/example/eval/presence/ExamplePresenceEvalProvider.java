@@ -157,7 +157,8 @@ public class ExamplePresenceEvalProvider extends GenericGaRoSingleEvalProvider {
 					return new TimeSeriesResultImpl(rt, cec.tsBuilder.getTimeSeries(), inputData);
 				}
     };
-    public final static GenericGaRoResultType AVERAGE_TEMPERATURE_PRESENCE_FIRSTGUESS = new GenericGaRoResultType("Avergage temperature when presence was detected (first guess)") {
+    public final static GenericGaRoResultType AVERAGE_TEMPERATURE_PRESENCE_FIRSTGUESS = new GenericGaRoResultType("Average_with_presence_first_guess_Temperature",
+    		"Avergage temperature when presence was detected (first guess)") {
 				@Override
 				public SingleEvaluationResult getEvalResult(GenericGaRoEvaluationCore ec, ResultType rt,
 						List<TimeSeriesData> inputData) {

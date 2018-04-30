@@ -68,7 +68,7 @@ public class ExampleDependentTemperatureEvalProvider extends GenericGaRoSingleEv
     	private float lastTemperature = Float.NaN;
     	
     	//Pre-evaluation values
-    	float preVal;
+    	Float preVal;
     	
     	public EvalCore(List<EvaluationInput> input, List<ResultType> requestedResults,
     			Collection<ConfigurationInstance> configurations, EvaluationListener listener, long time,
@@ -79,7 +79,7 @@ public class ExampleDependentTemperatureEvalProvider extends GenericGaRoSingleEv
     		/**If there are several temperature sensors we always use the average of the current values*/
        		temperature = new InputSeriesAggregator(nrInput, idxSumOfPrevious,
     				TEMP_IDX, startEnd[1], null, AggregationMode.AVERAGING);
-       		
+
 			preVal = getPreEvalRoomValue(PRESENCE_PROVIDER_ID, ExamplePresenceEvalProvider.AVERAGE_TEMPERATURE_PRESENCE_FIRSTGUESS.id());
 
     	}
@@ -110,7 +110,8 @@ public class ExampleDependentTemperatureEvalProvider extends GenericGaRoSingleEv
  	/**
  	 * Define the results of the evaluation here including the final calculation
  	 */
-    public final static GenericGaRoResultType AVERAGE_TEMPERATURE_PRESENCE = new GenericGaRoResultType("Avergage temperature when presence was detected") {
+    public final static GenericGaRoResultType AVERAGE_TEMPERATURE_PRESENCE = new GenericGaRoResultType("Average_with_presence_Temperature",
+    		"Avergage temperature when presence was detected") {
 				@Override
 				public SingleEvaluationResult getEvalResult(GenericGaRoEvaluationCore ec, ResultType rt,
 						List<TimeSeriesData> inputData) {
@@ -118,13 +119,17 @@ public class ExampleDependentTemperatureEvalProvider extends GenericGaRoSingleEv
 					return new SingleValueResultImpl<Float>(rt, cec.avTemperatureWhenPresence.getAverage(), inputData);
 				}
     };
-    public final static GenericGaRoResultType DIFF_FIRSTGUESS = new GenericGaRoResultType("Difference to first guess of temperature with presence") {
+    public final static GenericGaRoResultType DIFF_FIRSTGUESS = new GenericGaRoResultType("Difference_to_first_guess_Temperature",
+    		"Difference to first guess of temperature with presence") {
 				@Override
 				public SingleEvaluationResult getEvalResult(GenericGaRoEvaluationCore ec, ResultType rt,
 						List<TimeSeriesData> inputData) {
 					EvalCore cec = ((EvalCore)ec);
 					float myVal = cec.avTemperatureWhenPresence.getAverage();
-					return new SingleValueResultImpl<Float>(rt, myVal - cec.preVal, inputData);
+					if(cec.preVal != null)
+						return new SingleValueResultImpl<Float>(rt, myVal - cec.preVal, inputData);
+					else
+						return new SingleValueResultImpl<Float>(rt, Float.NaN, inputData);
 				}
     };
     private static final List<GenericGaRoResultType> RESULTS = Arrays.asList(AVERAGE_TEMPERATURE_PRESENCE,
