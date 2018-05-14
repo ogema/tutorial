@@ -7,7 +7,6 @@ import org.ogema.core.channelmanager.measurements.FloatValue;
 import org.ogema.core.channelmanager.measurements.Quality;
 import org.ogema.core.channelmanager.measurements.SampledValue;
 import org.ogema.core.timeseries.ReadOnlyTimeSeries;
-import org.ogema.serialization.jaxb.Resource;
 import org.ogema.tools.resource.util.ValueResourceUtils;
 import org.ogema.tools.timeseries.api.FloatTimeSeries;
 import org.ogema.tools.timeseries.implementations.FloatTreeTimeSeries;
@@ -48,7 +47,7 @@ public class ExampleOverallGaRoMultiResult extends GaRoMultiResultExtended {
 	private final ResultType singleRoomGapTimeResult;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public ExampleOverallGaRoMultiResult(List<MultiEvaluationInputGeneric<Resource>> inputData, long start, long end,
+	public ExampleOverallGaRoMultiResult(List<MultiEvaluationInputGeneric> inputData, long start, long end,
 			Collection<ConfigurationInstance> configurations,
 			ResultType singleRoomTimeSeries, ResultType singleRoomGapTimeResult) {
 		super((List)inputData, start, end, configurations);
