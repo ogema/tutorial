@@ -149,7 +149,8 @@ public class ExamplePresenceEvalProvider extends GenericGaRoSingleEvalProvider {
  	/**
  	 * Define the results of the evaluation here including the final calculation
  	 */
-    public final static GenericGaRoResultType CLEANED_PRESENCE_TS = new GenericGaRoResultType("Cleaned_Presence_TS") {
+    public final static GenericGaRoResultType CLEANED_PRESENCE_TS = new GenericGaRoResultType(
+    		"Cleaned_Presence_TS", ID) {
 				@Override
 				public SingleEvaluationResult getEvalResult(GenericGaRoEvaluationCore ec, ResultType rt,
 						List<TimeSeriesData> inputData) {

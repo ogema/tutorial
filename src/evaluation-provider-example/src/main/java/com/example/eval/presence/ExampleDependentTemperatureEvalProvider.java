@@ -147,7 +147,7 @@ public class ExampleDependentTemperatureEvalProvider extends GenericGaRoSingleEv
 		return new EvalCore(input, requestedResults, configurations, listener, time, size, nrInput, idxSumOfPrevious, startEnd);
 	}
 
-	public static final String PRESENCE_PROVIDER_ID = ExamplePresenceEvalProvider.class.getSimpleName();
+	public static final String PRESENCE_PROVIDER_ID = ExamplePresenceEvalProvider.ID;
 	public static final PreEvaluationRequested CLEAN_PRESENCE_PROVIDER = new PreEvaluationRequested(
 			PRESENCE_PROVIDER_ID);
 
