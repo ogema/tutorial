@@ -66,10 +66,6 @@
             <groupId>org.ogema.core</groupId>
             <artifactId>models</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.iwes.widgets</groupId>
-            <artifactId>widget-collection-util</artifactId>
-        </dependency>
          <dependency>
             <groupId>de.iwes.widgets</groupId>
             <artifactId>ogema-js-bundle</artifactId>
