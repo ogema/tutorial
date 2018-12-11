@@ -9,6 +9,6 @@
 (org.osgi.framework.PackagePermission "de.iwes.widgets.*" "import")
 (org.osgi.framework.PackagePermission "de.iwes.tools.*" "import")
 (org.osgi.framework.PackagePermission "de.iwes.util.*" "import")
-(org.ogema.accesscontrol.WebAccessPermission "name=de.iwes.widgets.ogema-js-bundle")
+(org.ogema.accesscontrol.WebAccessPermission "name=org.ogema.widgets.ogema-js-bundle")
 
 #Automated Generation Below:

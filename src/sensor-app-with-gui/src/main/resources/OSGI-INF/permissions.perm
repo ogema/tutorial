@@ -12,7 +12,7 @@
 (org.osgi.framework.PackagePermission "org.slf4j" "import")
 (org.osgi.framework.PackagePermission "org.osgi.framework" "import")
 (org.osgi.framework.PackagePermission "org.smartrplace.util.*" "import")
-(org.ogema.accesscontrol.WebAccessPermission "name=de.iwes.widgets.ogema-js-bundle")
+(org.ogema.accesscontrol.WebAccessPermission "name=org.ogema.widgets.ogema-js-bundle")
 
 #Automated Generation Below:
 # import permissions

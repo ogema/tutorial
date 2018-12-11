@@ -11,7 +11,7 @@
 (org.osgi.framework.PackagePermission "de.iwes.tools.*" "import")
 (org.osgi.framework.PackagePermission "de.iwes.util.*" "import")
 (org.osgi.framework.PackagePermission "org.slf4j" "import")
-(org.ogema.accesscontrol.WebAccessPermission "name=de.iwes.widgets.ogema-js-bundle")
+(org.ogema.accesscontrol.WebAccessPermission "name=org.ogema.widgets.ogema-js-bundle")
 
 # export custom resource types
 (org.osgi.framework.PackagePermission "com.example.driver.schedule.csv.importer.model" "exportonly")
