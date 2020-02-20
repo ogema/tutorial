@@ -1,19 +1,13 @@
 package com.example.app.windowheatcontrol.patternlistener;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.ogema.core.application.ApplicationManager;
 import org.ogema.core.resourcemanager.pattern.PatternListener;
-import org.ogema.model.devices.buildingtechnology.Thermostat;
 import org.ogema.model.locations.Room;
-import org.ogema.model.scheduleviewer.config.ScheduleViewerConfig;
 
 import com.example.app.windowheatcontrol.api.internal.RoomManagement;
 import com.example.app.windowheatcontrol.pattern.ThermostatPattern;
 
 import de.iwes.util.linkingresource.LinkingResourceManagement;
-import de.iwes.util.logconfig.LogHelper;
 
 /**
  * Keeps track of thermostats, and informs the appropriate RoomController about new and disappearing devices. 
@@ -24,7 +18,7 @@ public class ThermostatListener implements PatternListener<ThermostatPattern> {
 	private final LinkingResourceManagement<Room, ThermostatPattern> thermostats;
 	private final RoomManagement rooms;
 	private final ApplicationManager appMan;
-	private final Map<Thermostat, ScheduleViewerConfig[]> viewerConfigs = new HashMap<>();
+	//private final Map<Thermostat, ScheduleViewerConfig[]> viewerConfigs = new HashMap<>();
 
 	public ThermostatListener(LinkingResourceManagement<Room, ThermostatPattern> thermostats, 
 			                    RoomManagement rooms,
@@ -43,9 +37,9 @@ public class ThermostatListener implements PatternListener<ThermostatPattern> {
 		// value logging
 		// development version -> creates a schedule viewer configuration, which would be considered as resource spam in a deployed app
 		// TODO: remove for deployment version
-		ScheduleViewerConfig viewerConfig1 = LogHelper.addResourceToRoomLog(thermostat.setpoint, "ThermostatSetpoint", null, appMan);
-		ScheduleViewerConfig viewerConfig2 = LogHelper.addResourceToRoomLog(thermostat.reading, "ThermostatTemperatureMeasurement", null, appMan);
-		viewerConfigs.put(thermostat.model, new ScheduleViewerConfig[] {viewerConfig1, viewerConfig2});
+		//ScheduleViewerConfig viewerConfig1 = LogHelper.addResourceToRoomLog(thermostat.setpoint, "ThermostatSetpoint", null, appMan);
+		//ScheduleViewerConfig viewerConfig2 = LogHelper.addResourceToRoomLog(thermostat.reading, "ThermostatTemperatureMeasurement", null, appMan);
+		//viewerConfigs.put(thermostat.model, new ScheduleViewerConfig[] {viewerConfig1, viewerConfig2});
 	}
 	
 	@Override
@@ -57,12 +51,12 @@ public class ThermostatListener implements PatternListener<ThermostatPattern> {
 		
 		// value logging  
 		// TODO: remove for deployment version
-		ScheduleViewerConfig[] viewerConfig = viewerConfigs.remove(thermostat.model);
-		if (viewerConfig != null) {
-			for (ScheduleViewerConfig config: viewerConfig) {
-				config.delete();
-			}
-		}
+		//ScheduleViewerConfig[] viewerConfig = viewerConfigs.remove(thermostat.model);
+		//if (viewerConfig != null) {
+		//	for (ScheduleViewerConfig config: viewerConfig) {
+		//		config.delete();
+		//	}
+		//}
 	}
 
 }
