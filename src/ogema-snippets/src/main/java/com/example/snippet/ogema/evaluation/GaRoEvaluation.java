@@ -157,7 +157,8 @@ public class GaRoEvaluation {
 			};
 		}
 		/**Finally start evaluation*/
-		OnlineNonBlockingIterator onlineNBI = EvaluationUtils.startEvaluationOnline(evalProvider, inputs, requestedResults , configurations,
+		//TODO: This call has to be fixed
+		OnlineNonBlockingIterator onlineNBI = de.iwes.timeseries.eval.onlineIterator.EvaluationUtils.startEvaluationOnline(evalProvider, inputs, requestedResults , configurations,
 				intermediateListener, appMan);
 		EvaluationInstance instance = onlineNBI.getEvaluationInstance();
 				

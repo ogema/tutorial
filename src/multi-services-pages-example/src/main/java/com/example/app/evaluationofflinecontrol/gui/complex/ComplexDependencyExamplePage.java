@@ -20,6 +20,8 @@ import de.iwes.timeseries.eval.garo.api.base.GaRoPreEvaluationProvider;
 import de.iwes.timeseries.eval.garo.api.base.GaRoStdPreEvaluationProvider;
 import de.iwes.timeseries.eval.garo.api.base.GaRoSuperEvalResult;
 import de.iwes.timeseries.eval.garo.api.helper.base.GaRoEvalHelper;
+import de.iwes.timeseries.eval.garo.helper.jaxb.GaRoEvalHelperGeneric;
+import de.iwes.timeseries.eval.garo.helper.jaxb.GaRoEvalHelperJAXB;
 import de.iwes.timeseries.eval.garo.multibase.GaRoSingleEvalProvider;
 import de.iwes.timeseries.eval.garo.multibase.GaRoSingleEvalProviderPreEvalRequesting;
 import de.iwes.widgets.api.extended.WidgetData;
@@ -301,11 +303,11 @@ public class ComplexDependencyExamplePage {
 						break;
 					case 1:
 						Path preEvalFile = Paths.get(FILE_PATH+"/"+selectPreEval1.getSelectedLabel(req));
-						GaRoPreEvaluationProvider<Resource> preProvider = 
-								new GaRoStdPreEvaluationProvider<Resource, GaRoMultiResultDeser, GaRoSuperEvalResult<Resource, GaRoMultiResultDeser>>
+						GaRoPreEvaluationProvider preProvider = 
+								new GaRoStdPreEvaluationProvider<GaRoMultiResultDeser, GaRoSuperEvalResult<GaRoMultiResultDeser>>
 						(GaRoSuperEvalResultDeser.class, preEvalFile.toString());
 					
-						GaRoEvalHelper.performGenericMultiEvalOverAllData(selectProvider.getSelectedItem(req).getClass(),
+						GaRoEvalHelperGeneric.performGenericMultiEvalOverAllData(selectProvider.getSelectedItem(req).getClass(),
 								controller.appMan,
 								startTime, endTime,
 								ChronoUnit.DAYS,
@@ -315,17 +317,17 @@ public class ComplexDependencyExamplePage {
 						break;
 					case 2:
 						Path preEvalFile1 = Paths.get(FILE_PATH+"/"+selectPreEval1.getSelectedLabel(req));
-						GaRoPreEvaluationProvider<Resource> preProvider1 = 
-								new GaRoStdPreEvaluationProvider<Resource, GaRoMultiResultDeser, GaRoSuperEvalResult<Resource, GaRoMultiResultDeser>>
+						GaRoPreEvaluationProvider preProvider1 = 
+								new GaRoStdPreEvaluationProvider<GaRoMultiResultDeser, GaRoSuperEvalResult<GaRoMultiResultDeser>>
 						(GaRoSuperEvalResultDeser.class, preEvalFile1.toString());
 	
 						Path preEvalFile2 = Paths.get(FILE_PATH+"/"+selectPreEval1.getSelectedLabel(req));
-						GaRoPreEvaluationProvider<Resource> preProvider2 = 
-								new GaRoStdPreEvaluationProvider<Resource, GaRoMultiResultDeser, GaRoSuperEvalResult<Resource, GaRoMultiResultDeser>>
+						GaRoPreEvaluationProvider preProvider2 = 
+								new GaRoStdPreEvaluationProvider<GaRoMultiResultDeser, GaRoSuperEvalResult<GaRoMultiResultDeser>>
 						(GaRoSuperEvalResultDeser.class, preEvalFile2.toString());
 
 						
-						GaRoEvalHelper.performGenericMultiEvalOverAllData(selectProvider.getSelectedItem(req).getClass(),
+						GaRoEvalHelperJAXB.performGenericMultiEvalOverAllData(selectProvider.getSelectedItem(req),
 								controller.appMan,
 								startTime, endTime,
 								ChronoUnit.DAYS,
