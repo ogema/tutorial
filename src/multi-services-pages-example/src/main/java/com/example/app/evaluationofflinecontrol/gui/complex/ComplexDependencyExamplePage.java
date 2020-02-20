@@ -4,13 +4,10 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.ogema.serialization.jaxb.Resource;
 
 import com.example.app.evaluationofflinecontrol.MultiServicePageController;
 
@@ -19,9 +16,6 @@ import de.iwes.timeseries.eval.api.ResultType;
 import de.iwes.timeseries.eval.garo.api.base.GaRoPreEvaluationProvider;
 import de.iwes.timeseries.eval.garo.api.base.GaRoStdPreEvaluationProvider;
 import de.iwes.timeseries.eval.garo.api.base.GaRoSuperEvalResult;
-import de.iwes.timeseries.eval.garo.api.helper.base.GaRoEvalHelper;
-import de.iwes.timeseries.eval.garo.helper.jaxb.GaRoEvalHelperGeneric;
-import de.iwes.timeseries.eval.garo.helper.jaxb.GaRoEvalHelperJAXB;
 import de.iwes.timeseries.eval.garo.multibase.GaRoSingleEvalProvider;
 import de.iwes.timeseries.eval.garo.multibase.GaRoSingleEvalProviderPreEvalRequesting;
 import de.iwes.widgets.api.extended.WidgetData;
@@ -307,12 +301,12 @@ public class ComplexDependencyExamplePage {
 								new GaRoStdPreEvaluationProvider<GaRoMultiResultDeser, GaRoSuperEvalResult<GaRoMultiResultDeser>>
 						(GaRoSuperEvalResultDeser.class, preEvalFile.toString());
 					
-						GaRoEvalHelperGeneric.performGenericMultiEvalOverAllData(selectProvider.getSelectedItem(req).getClass(),
-								controller.appMan,
-								startTime, endTime,
-								ChronoUnit.DAYS,
-								null, false,
-								new GaRoPreEvaluationProvider[] {preProvider}, resultsRequested, roomIDs, newPath);
+						//GaRoEvalHelperGeneric.performGenericMultiEvalOverAllData(selectProvider.getSelectedItem(req).getClass(),
+						//		controller.appMan,
+						//		startTime, endTime,
+						//		ChronoUnit.DAYS,
+						//		null, false,
+						//		new GaRoPreEvaluationProvider[] {preProvider}, resultsRequested, roomIDs, newPath);
 						usedPreEval = true;
 						break;
 					case 2:
@@ -327,12 +321,12 @@ public class ComplexDependencyExamplePage {
 						(GaRoSuperEvalResultDeser.class, preEvalFile2.toString());
 
 						
-						GaRoEvalHelperJAXB.performGenericMultiEvalOverAllData(selectProvider.getSelectedItem(req),
-								controller.appMan,
-								startTime, endTime,
-								ChronoUnit.DAYS,
-								null, false,
-								new GaRoPreEvaluationProvider[] {preProvider1, preProvider2}, resultsRequested, roomIDs, newPath);
+						//GaRoEvalHelperJAXB.performGenericMultiEvalOverAllData(selectProvider.getSelectedItem(req),
+						//		controller.appMan,
+						//		startTime, endTime,
+						//		ChronoUnit.DAYS,
+						//		null, false,
+						//		new GaRoPreEvaluationProvider[] {preProvider1, preProvider2}, resultsRequested, roomIDs, newPath);
 						usedPreEval = true;
 						break;
 					default:
@@ -341,11 +335,11 @@ public class ComplexDependencyExamplePage {
 				}
 
 				if(!usedPreEval) {
-					GaRoEvalHelper.performGenericMultiEvalOverAllData(selectProvider.getSelectedItem(req).getClass(),
-					controller.appMan,
-					startTime, endTime,
-					ChronoUnit.DAYS,
-					null, true, null, resultsRequested, roomIDs, newPath);
+					//GaRoEvalHelper.performGenericMultiEvalOverAllData(selectProvider.getSelectedItem(req).getClass(),
+					//controller.appMan,
+					//startTime, endTime,
+					//ChronoUnit.DAYS,
+					//null, true, null, resultsRequested, roomIDs, newPath);
 				} 
 			}
 		};
