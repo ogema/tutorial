@@ -72,6 +72,11 @@
             <groupId>org.ogema.widgets</groupId>
             <artifactId>widget-collection</artifactId>
          </dependency>
+        <dependency>
+            <groupId>org.ogema.widgets</groupId>
+            <artifactId>widget-extended</artifactId>
+            <version>2.2.2-SNAPSHOT</version>
+         </dependency>
          
         <dependency>
             <groupId>org.ogema.widgets</groupId>
